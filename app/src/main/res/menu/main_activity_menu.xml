@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/logout"
+        android:icon="@drawable/triple_dot_option_icon"
+        android:title="Log out"
+        app:showAsAction="never"/>
+
+    <item android:id="@+id/delete"
+        android:title="Delete note"
+        app:showAsAction="never"/>
+</menu>
