@@ -1,3 +1,23 @@
 <resources>
-    <string name="app_name">MinScreenNotepad</string>
+    <string name="app_name">PiS_Project</string>
+    <string name="note_title">Título</string>
+    <string name="note_text">Escribe aquí el texto</string>
+    <string name="button_save">Guardar</string>
+    <string name="button_delete">Borrar</string>
+    <string name="element_text">Item text</string>
+    <string name="button_share">Compartir</string>
+    <string name="button_create_note">Crear nota</string>
+    <string name="button_options">Opciones</string>
+    <string name="play_button_description">Play audio button</string>
+    <string name="new_note">Añadir nota</string>
+    <string name="new_note_description">Add new note</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
 </resources>

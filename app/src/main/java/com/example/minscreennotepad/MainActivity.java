@@ -1,10 +1,12 @@
 package com.example.minscreennotepad;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,8 +24,10 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NoteListAdapter.OnNoteListener {
 
-    public List<Note> noteList;
+
     private NoteListAdapter noteListAdapter;
+    private SharedViewModel viewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +57,8 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
     }
 
     public void init() {
-        noteList = new ArrayList<>();
-        noteList.add(new NoteText("NotaTexto1", "Hola me llamo Martí"));
-        noteList.add(new NoteAudio("NotaAudio1", "audio1.mp3"));
-        noteList.add(new NoteImage("NotaImagen1", "imagen1.png"));
-        noteListAdapter = new NoteListAdapter(noteList, this, this);
+        viewModel = SharedViewModel.getInstance();
+        noteListAdapter = new NoteListAdapter(viewModel.getNoteList(), this, this);
         RecyclerView noteRecyclerView = findViewById(R.id.noteRView);
         noteRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         noteRecyclerView.setAdapter(noteListAdapter);
@@ -65,14 +66,49 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
     }
 
     public void addNoteButtonClick(View view) {
-        noteList.add(new NoteText("NotaTexto13", "Hola me lslamo Martí"));
-        noteListAdapter.notifyDataSetChanged();
+        viewModel = SharedViewModel.getInstance();
+        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+        builder.setTitle("¿Que tipo de nota quieres crear?");
+        builder.setItems(new CharSequence[]
+                        {"Texto", "Audio", "Imagen", "Cancelar"},
+                (dialog, which) -> {
+                    // The 'which' argument contains the index position
+                    // of the selected item
+                    switch (which) {
+                        case 0:
+                            goToTextCreatorActivity();
+                            break;
+                        case 1:
+                            Toast.makeText(view.getContext(), "Audio", Toast.LENGTH_SHORT).show();
+                            break;
+                        case 2:
+                            Toast.makeText(view.getContext(), "Imagen", Toast.LENGTH_SHORT).show();
+                            break;
+                        case 3:
+                            Toast.makeText(view.getContext(), "", Toast.LENGTH_SHORT).show();
+                            break;
+                    }
+                });
+        builder.create().show();
+
+    }
+
+    //Basic explicit intent to textCreatorActivity without extra data
+    public void goToTextCreatorActivity(){
+        Intent intent = new Intent(this, textCreatorActivity.class);
+        startActivity(intent);
+    }
+
+    //Basic explicit intent to textCreatorActivity without extra data
+    public void goToTextViewActivity(){
+        Intent intent = new Intent(this, textViewActivity.class);
+        startActivity(intent);
     }
 
     @Override
     public void onNoteClick(int position) {
-        Note noteSelected = noteList.get(position);
-        System.out.println(noteSelected.getTitle());
+        //Note noteSelected = noteList.get(position);
+        Note noteSelected = viewModel.getNoteByPosition(position);
         if(noteSelected instanceof NoteImage) {
             Toast.makeText(this, noteSelected.getTitle() + ": " + ((NoteImage) noteSelected).getFileName(), Toast.LENGTH_LONG).show();
         }
@@ -80,7 +116,8 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
             Toast.makeText(this, noteSelected.getTitle() + ": " + ((NoteAudio) noteSelected).getFileName(), Toast.LENGTH_LONG).show();
         }
         else if(noteSelected instanceof NoteText){
-            Toast.makeText(this, noteSelected.getTitle() + ": " + ((NoteText) noteSelected).getBody(), Toast.LENGTH_LONG).show();
+            viewModel.setNoteToView(position);
+            goToTextViewActivity();
         }
     }
 }
