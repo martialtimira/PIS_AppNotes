@@ -14,13 +14,15 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel {
     private volatile static SharedViewModel uniqueInstance;
 
     //Lista de notas
+    private Usuari loggedInUser;
     public List<Note> noteList;
+    private List<Usuari> userList;
     private Note noteToView;
     public static final String TAG = "ViewModel";
 
     //Constructor
     private SharedViewModel(){
-        noteList = new ArrayList<Note>();
+        noteList = new ArrayList<>();
     }
 
     public static SharedViewModel getInstance() {
