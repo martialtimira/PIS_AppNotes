@@ -19,8 +19,9 @@
 
     <item
         android:id="@+id/guardar"
+        android:icon="@drawable/ic_outline_save_24"
         android:title="@string/button_save"
-        android:onClick="saveChangesTextNote"
-        app:showAsAction="never" />
+        android:onClick="saveChangesImageNote"
+        app:showAsAction="ifRoom" />
 
 </menu>
