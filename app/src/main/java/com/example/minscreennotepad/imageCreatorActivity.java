@@ -1,6 +1,7 @@
 package com.example.minscreennotepad;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -11,6 +12,7 @@ import android.app.Activity;
 import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -41,7 +43,6 @@ public class imageCreatorActivity extends AppCompatActivity {
     private ImageView selectedImage;
     private ImageButton camera_button;
     private ImageButton gallery_button;
-    private String currentPhotoPath;
     private Uri imageUri;
 
     private SharedViewModel viewModel;
@@ -155,11 +156,34 @@ public class imageCreatorActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                goToMainActivity();
+                showReturnDialog(android.R.id.home);
+                //goToMainActivity();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void showReturnDialog(int item) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Confirmación");
+        alert.setTitle("¿Seguro que quieres salir?");
+
+        alert.setPositiveButton("Salir", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                goToMainActivity();
+            }
+        });
+
+        alert.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(imageCreatorActivity.this, "Operación Cancelada", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        alert.create().show();
     }
 
     public void goToMainActivity(){

@@ -44,11 +44,34 @@ public class imageViewActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                goToMainActivity();
+                showReturnDialog(android.R.id.home);
+                //goToMainActivity();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void showReturnDialog(int item) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Confirmación");
+        alert.setTitle("¿Seguro que quieres salir?");
+
+        alert.setPositiveButton("Salir", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                goToMainActivity();
+            }
+        });
+
+        alert.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(imageViewActivity.this, "Operación Cancelada", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        alert.create().show();
     }
 
     private void goToMainActivity() {
