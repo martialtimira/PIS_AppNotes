@@ -213,6 +213,7 @@ public class imageCreatorActivity extends AppCompatActivity {
             viewModel.addImageNote(noteTitle.getText().toString(), imageUri);
             Toast.makeText(this, "Nota guardada", Toast.LENGTH_SHORT).show();
             goToMainActivity();
+            this.finish();
         }
     }
 

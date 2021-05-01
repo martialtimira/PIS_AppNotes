@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -25,14 +26,23 @@ public class LoginActivity extends AppCompatActivity {
         if(loginStatus.equals("Login Correcte")){
             goToMainActivity();
         }
+        else {
+            Toast.makeText(view.getContext(), loginStatus, Toast.LENGTH_SHORT).show();
+        }
     }
 
-    private void onSignUp() {
+    private void signUpButtonClicn(View view) {
+        goToSignupActivity();
+    }
 
+    private void goToSignupActivity() {
+        Intent intent = new Intent(this, SignUpActivity.class);
+        startActivity(intent);
     }
 
     private void goToMainActivity(){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        this.finish();
     }
 }
