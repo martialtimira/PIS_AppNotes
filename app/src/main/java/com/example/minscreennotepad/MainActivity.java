@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
 
     private NoteListAdapter noteListAdapter;
     private SharedViewModel viewModel;
+    private boolean userChanged;
 
 
     @Override
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.logout:
-                Toast.makeText(this, "Logout selected", Toast.LENGTH_SHORT).show();
+                logout();
                 return true;
             case R.id.delete:
                 Toast.makeText(this, "delete     selected", Toast.LENGTH_SHORT).show();
@@ -58,12 +59,33 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
 
     public void init() {
         viewModel = SharedViewModel.getInstance();
+        viewModel.signUpUser("marti", "123");
+        viewModel.signUpUser("joan", "123");
+        if(viewModel.getLoggedInUser() == null) {
+            goToLoginActivity();
+        }
+        userChanged = false;
         noteListAdapter = new NoteListAdapter(viewModel.getNoteList(), this, this);
         RecyclerView noteRecyclerView = findViewById(R.id.noteRView);
         noteRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         noteRecyclerView.setAdapter(noteListAdapter);
     }
 
+    @Override
+    protected void onResume() {
+        if(viewModel.getLoggedInUser() == null) {
+            goToLoginActivity();
+        }
+        if(userChanged) {
+            noteListAdapter.setItems(viewModel.getNoteList());
+        }
+        super.onResume();
+    }
+
+    private void logout() {
+        viewModel.setLoggedInUser(null);
+        goToLoginActivity();
+    }
     public void addNoteButtonClick(View view) {
         viewModel = SharedViewModel.getInstance();
         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
@@ -95,6 +117,12 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
     //Basic explicit intent to textCreatorActivity without extra data
     private void goToImageCreatorActivity() {
         Intent intent = new Intent(this, imageCreatorActivity.class);
+        startActivity(intent);
+    }
+
+    private void goToLoginActivity() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        userChanged = true;
         startActivity(intent);
     }
 
