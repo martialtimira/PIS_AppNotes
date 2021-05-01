@@ -240,7 +240,7 @@ public class imageCreatorActivity extends AppCompatActivity {
     public void sameTitleDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Error");
-        alert.setTitle("Título ya en uso");
+        alert.setTitle("El título ya está en uso.");
 
         alert.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override

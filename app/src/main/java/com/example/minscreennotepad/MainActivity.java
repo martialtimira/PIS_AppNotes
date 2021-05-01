@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
     public void addNoteButtonClick(View view) {
         viewModel = SharedViewModel.getInstance();
         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-        builder.setTitle("¿Que tipo de nota quieres crear?");
+        builder.setTitle("¿Qué tipo de nota quieres crear?");
         builder.setItems(new CharSequence[]
                         {"Texto", "Audio", "Imagen", "Cancelar"},
                 (dialog, which) -> {

@@ -137,7 +137,7 @@ public class imageViewActivity extends AppCompatActivity {
         alert.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(imageViewActivity.this, "Operación Cancelada", Toast.LENGTH_SHORT).show();
+                Toast.makeText(imageViewActivity.this, "Operación cancelada", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -147,7 +147,7 @@ public class imageViewActivity extends AppCompatActivity {
     public void sameTitleDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Error");
-        alert.setTitle("Título ya en uso");
+        alert.setTitle("El título ya está en uso");
 
         alert.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
