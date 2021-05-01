@@ -74,4 +74,14 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel {
         noteList.add(textNote);
     }
 
+    public boolean isValidTitle(String title) {
+        boolean isValid = true;
+        for (Note n: noteList) {
+            if(n.getTitle().equals(title)){
+                isValid = false;
+            }
+        }
+        return isValid;
+    }
+
 }

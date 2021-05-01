@@ -57,8 +57,16 @@ public class textCreatorActivity extends AppCompatActivity {
     public void saveTextNote (MenuItem item) {
         EditText noteTitle = (EditText) findViewById(R.id.titleText);
         EditText noteText = (EditText) findViewById(R.id.text);
-        viewModel.addTextNote( noteTitle.getText().toString(),  noteText.getText().toString());
-        Toast.makeText(this, "Nota guardada", Toast.LENGTH_SHORT).show();
-        goToMainActivity();
+        if(!viewModel.isValidTitle(noteTitle.getText().toString())) {
+            Toast.makeText(this, "Titulo ya usado", Toast.LENGTH_SHORT).show();
+        }
+        else if(noteText.getText().toString().length() > 10) {
+            Toast.makeText(this, "Nota demasiado larga", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            viewModel.addTextNote( noteTitle.getText().toString(),  noteText.getText().toString());
+            Toast.makeText(this, "Nota guardada", Toast.LENGTH_SHORT).show();
+            goToMainActivity();
+        }
     }
 }
