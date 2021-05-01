@@ -2,7 +2,6 @@ package com.example.minscreennotepad;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -55,14 +54,14 @@ public class textViewActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater=getMenuInflater();
-        inflater.inflate(R.menu.view_note_menu, menu);
+        inflater.inflate(R.menu.view_text_note_menu, menu);
         return true;
     }
 
     //Ponemos el título y texto de la nota
     public void setNote(){
-        EditText noteTitle = (EditText) findViewById(R.id.titleText);
-        EditText noteText = (EditText) findViewById(R.id.text);
+        EditText noteTitle = (EditText) findViewById(R.id.textView_titleText);
+        EditText noteText = (EditText) findViewById(R.id.text_view_text);
 
         NoteText note = (NoteText)viewModel.getNoteToView();
 
@@ -72,8 +71,8 @@ public class textViewActivity extends AppCompatActivity {
 
     //Guardar cambios nota de texto
     public void saveChangesTextNote(MenuItem item) {
-        EditText noteTitle = (EditText) findViewById(R.id.titleText);
-        EditText noteText = (EditText) findViewById(R.id.text);
+        EditText noteTitle = (EditText) findViewById(R.id.textView_titleText);
+        EditText noteText = (EditText) findViewById(R.id.text_view_text);
 
         NoteText note = (NoteText)viewModel.getNoteToView();
 
