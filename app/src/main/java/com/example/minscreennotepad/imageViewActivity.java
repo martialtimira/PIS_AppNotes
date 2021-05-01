@@ -103,18 +103,21 @@ public class imageViewActivity extends AppCompatActivity {
 
         NoteImage note = (NoteImage)viewModel.getNoteToView();
         if(!viewModel.isValidTitle(noteTitle.getText().toString())) {
-            Toast.makeText(this, "Titulo ya en uso", Toast.LENGTH_SHORT).show();
+            sameTitleDialog();
+        }
+        else if(noteTitle.getText().toString().isEmpty()){
+            nullTitleDialog();
         }
         else {
             note.setTitle(noteTitle.getText().toString());
+            goToMainActivity();
         }
-        goToMainActivity();
     }
 
     /*
      *
      * @param item
-     * Mensaje de confirmación para eliminar una nota
+     * Dialogs
      */
     public void showDeleteDialog (MenuItem item) {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -139,4 +142,34 @@ public class imageViewActivity extends AppCompatActivity {
 
         alert.create().show();
     }
+
+    public void sameTitleDialog() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Error");
+        alert.setTitle("Título ya en uso");
+
+        alert.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        alert.create().show();
+    }
+
+    public void nullTitleDialog() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Error");
+        alert.setTitle("El título está vacío.");
+
+        alert.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        alert.create().show();
+    }
+
+
 }

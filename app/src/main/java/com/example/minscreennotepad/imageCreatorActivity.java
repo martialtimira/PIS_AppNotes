@@ -222,16 +222,13 @@ public class imageCreatorActivity extends AppCompatActivity {
     public void saveImageNote(MenuItem item) {
         EditText noteTitle = (EditText) findViewById(R.id.imageTitle);
         if(!viewModel.isValidTitle(noteTitle.getText().toString())) {
-            //cambiar a dialog
-            Toast.makeText(this, "Titulo ya en uso", Toast.LENGTH_SHORT).show();
+            sameTitleDialog();
         }
         else if (noteTitle.getText().toString().isEmpty()) {
-            //cambiar a dialog
-            Toast.makeText(this, "Titulo no puede estar vacío", Toast.LENGTH_SHORT).show();
+            nullTitleDialog();
         }
         else if (imageUri==null) {
-            //cambiar a dialog
-            Toast.makeText(this, "Selecciona una imagen", Toast.LENGTH_SHORT).show();
+            nullContentDialog();
         }
         else {
             viewModel.addImageNote(noteTitle.getText().toString(), imageUri);
@@ -239,6 +236,49 @@ public class imageCreatorActivity extends AppCompatActivity {
             goToMainActivity();
         }
     }
+
+    public void sameTitleDialog() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Error");
+        alert.setTitle("Título ya en uso");
+
+        alert.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        alert.create().show();
+    }
+
+    public void nullTitleDialog() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Error");
+        alert.setTitle("El título está vacío.");
+
+        alert.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        alert.create().show();
+    }
+
+    public void nullContentDialog() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Error");
+        alert.setTitle("Selecciona una imagen.");
+
+        alert.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        alert.create().show();
+    }
+
 
     private Uri getImageUriFromBitmap(Context context, Bitmap bitmap){
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
