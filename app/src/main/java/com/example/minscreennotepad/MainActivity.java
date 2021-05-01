@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
         RecyclerView noteRecyclerView = findViewById(R.id.noteRView);
         noteRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         noteRecyclerView.setAdapter(noteListAdapter);
-
     }
 
     public void addNoteButtonClick(View view) {
