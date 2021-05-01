@@ -2,7 +2,9 @@ package com.example.minscreennotepad;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -19,6 +21,25 @@ public class SignUpActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Sign up");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+    }
+
+    //Botón/flecha para regresar a la pantalla de Login
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                goToLoginctivity();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    //Basic explicit intent to LoginActivity without extra data
+    private void goToLoginctivity(){
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        this.finish();
     }
 
     public void signUpUserButtonClick(View view) {

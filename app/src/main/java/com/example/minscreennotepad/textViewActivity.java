@@ -38,7 +38,7 @@ public class textViewActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                goToMainActivity();
+                showBackDialog();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -81,7 +81,6 @@ public class textViewActivity extends AppCompatActivity {
         note.setBody(noteText.getText().toString());
 
         Toast.makeText(this, "Cambios guardados", Toast.LENGTH_SHORT).show();
-
     }
 
     /*
@@ -111,6 +110,69 @@ public class textViewActivity extends AppCompatActivity {
         });
 
         alert.create().show();
+    }
+
+    /*
+     *
+     * @param item
+     * Mensaje de confirmación para eliminar una nota
+     */
+    public void showBackDialog () {
+        EditText noteTitle = (EditText) findViewById(R.id.textView_titleText);
+        EditText noteText = (EditText) findViewById(R.id.text_view_text);
+        NoteText note = (NoteText)viewModel.getNoteToView();
+
+        //Si hay algun cambio en la nota, damos la opción de guardarlo
+        if(!noteTitle.getText().toString().equals(note.getTitle()) || !noteText.getText().toString().equals(note.getBody())) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("Confirmación");
+            alert.setTitle("¿Quieres guardar los cambios?");
+
+            alert.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if(!viewModel.isValidTitle(noteTitle.getText().toString())) {
+                        //cambiar a dialog
+                        Toast.makeText(textViewActivity.this, "Titulo ya usado", Toast.LENGTH_SHORT).show();
+                    }
+                    else if (noteTitle.getText().toString().isEmpty()) {
+                        //cambiar a dialog
+                        Toast.makeText(textViewActivity.this, "Titulo no puede estar vacío", Toast.LENGTH_SHORT).show();
+                    }
+                    else if(noteText.getText().toString().length() > 10000) {
+                        //cambiar a dialog
+                        Toast.makeText(textViewActivity.this, "Nota demasiado larga", Toast.LENGTH_SHORT).show();
+                    }
+                    else{
+                        note.setTitle(noteTitle.getText().toString());
+                        note.setBody(noteText.getText().toString());
+                        Toast.makeText(textViewActivity.this, "Cambios guardados", Toast.LENGTH_SHORT).show();
+                        goToMainActivity();
+                    }
+                }
+            });
+
+            alert.setNegativeButton("No guardar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Toast.makeText(textViewActivity.this, "Cambios no guardados", Toast.LENGTH_SHORT).show();
+                    goToMainActivity();
+                }
+            });
+
+            alert.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Toast.makeText(textViewActivity.this, "Acción cancelada", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            alert.create().show();
+        }
+        //Si no hay cambios, volvemos directamente a MainActivity
+        else{
+            goToMainActivity();
+        }
     }
 
 }

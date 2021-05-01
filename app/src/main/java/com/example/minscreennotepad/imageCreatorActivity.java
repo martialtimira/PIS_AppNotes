@@ -1,6 +1,7 @@
 package com.example.minscreennotepad;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -11,6 +12,7 @@ import android.app.Activity;
 import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -28,6 +30,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.example.minscreennotepad.NoteClasses.NoteText;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -155,7 +159,7 @@ public class imageCreatorActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                goToMainActivity();
+                showBackDialog();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -221,5 +225,58 @@ public class imageCreatorActivity extends AppCompatActivity {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "Title", null);
         return Uri.parse(path.toString());
+    }
+
+    /*
+     *
+     * @param item
+     * Mensaje de confirmación para eliminar una nota
+     */
+    public void showBackDialog() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Confirmación");
+        alert.setTitle("¿Quieres guardar esta nota?");
+
+        EditText noteTitle = (EditText) findViewById(R.id.imageTitle);
+
+        alert.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(!viewModel.isValidTitle(noteTitle.getText().toString())) {
+                    //cambiar a dialog
+                    Toast.makeText(imageCreatorActivity.this, "Titulo ya en uso", Toast.LENGTH_SHORT).show();
+                }
+                else if (noteTitle.getText().toString().isEmpty()) {
+                    //cambiar a dialog
+                    Toast.makeText(imageCreatorActivity.this, "Titulo no puede estar vacío", Toast.LENGTH_SHORT).show();
+                }
+                else if (imageUri==null) {
+                    //cambiar a dialog
+                    Toast.makeText(imageCreatorActivity.this, "Selecciona una imagen", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    viewModel.addImageNote(noteTitle.getText().toString(), imageUri);
+                    Toast.makeText(imageCreatorActivity.this, "Nota guardada", Toast.LENGTH_SHORT).show();
+                    goToMainActivity();
+                }
+            }
+        });
+
+        alert.setNegativeButton("No guardar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(imageCreatorActivity.this, "Nota eliminada", Toast.LENGTH_SHORT).show();
+                goToMainActivity();
+            }
+        });
+
+        alert.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(imageCreatorActivity.this, "Acción cancelada", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        alert.create().show();
     }
 }

@@ -5,12 +5,12 @@ import com.example.minscreennotepad.NoteClasses.Note;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Usuari {
+public class User {
 
     private String userName, password;
     private List<Note> noteList;
 
-    public Usuari(String userName, String password) {
+    public User(String userName, String password) {
         this.userName = userName;
         this.password = password;
         this.noteList = new ArrayList<>();

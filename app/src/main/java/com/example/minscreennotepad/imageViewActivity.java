@@ -44,7 +44,7 @@ public class imageViewActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                goToMainActivity();
+                showBackDialog();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -85,8 +85,8 @@ public class imageViewActivity extends AppCompatActivity {
         }
         else {
             note.setTitle(noteTitle.getText().toString());
+            goToMainActivity();
         }
-        goToMainActivity();
     }
 
     /*
@@ -116,5 +116,58 @@ public class imageViewActivity extends AppCompatActivity {
         });
 
         alert.create().show();
+    }
+
+
+    /*
+     *
+     * @param item
+     * Mensaje de confirmación para eliminar una nota
+     */
+    public void showBackDialog () {
+        EditText noteTitle = (EditText) findViewById(R.id.imageTitle);
+        NoteImage note = (NoteImage)viewModel.getNoteToView();
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Confirmación");
+        alert.setTitle("¿Quieres guardar los cambios?");
+
+        alert.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if(!viewModel.isValidTitle(noteTitle.getText().toString())) {
+                    //cambiar a dialog
+                    Toast.makeText(imageViewActivity.this, "Titulo ya usado", Toast.LENGTH_SHORT).show();
+                }
+                else if (noteTitle.getText().toString().isEmpty()) {
+                    //cambiar a dialog
+                    Toast.makeText(imageViewActivity.this, "Titulo no puede estar vacío", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    note.setTitle(noteTitle.getText().toString());
+                    Toast.makeText(imageViewActivity.this, "Cambios guardados", Toast.LENGTH_SHORT).show();
+                    goToMainActivity();
+                }
+            }
+        });
+
+        alert.setNegativeButton("No guardar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(imageViewActivity.this, "Cambios no guardados", Toast.LENGTH_SHORT).show();
+                goToMainActivity();
+            }
+        });
+
+        alert.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(imageViewActivity.this, "Acción cancelada", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        alert.create().show();
+
+
     }
 }

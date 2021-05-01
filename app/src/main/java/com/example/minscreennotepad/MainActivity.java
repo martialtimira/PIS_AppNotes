@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -84,15 +85,14 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
         viewModel.setLoggedInUser(null);
         goToLoginActivity();
     }
+
     public void addNoteButtonClick(View view) {
         viewModel = SharedViewModel.getInstance();
         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
         builder.setTitle("¿Que tipo de nota quieres crear?");
         builder.setItems(new CharSequence[]
-                        {"Texto", "Audio", "Imagen", "Cancelar"},
+                        {"Texto", "Audio", "Imagen"},
                 (dialog, which) -> {
-                    // The 'which' argument contains the index position
-                    // of the selected item
                     switch (which) {
                         case 0:
                             goToTextCreatorActivity();
@@ -103,11 +103,14 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
                         case 2:
                             goToImageCreatorActivity();
                             break;
-                        case 3:
-                            Toast.makeText(view.getContext(), "", Toast.LENGTH_SHORT).show();
-                            break;
                     }
                 });
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(MainActivity.this, "Acción cancelada", Toast.LENGTH_SHORT).show();
+            }
+        });
         builder.create().show();
 
     }
@@ -157,5 +160,4 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
             goToTextViewActivity();
         }
     }
-
 }
