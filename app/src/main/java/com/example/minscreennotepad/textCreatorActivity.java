@@ -40,9 +40,10 @@ public class textCreatorActivity extends AppCompatActivity {
     }
 
     //Basic explicit intent to MainActivity without extra data
-    public void goToMainActivity(){
+    private void goToMainActivity(){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        this.finish();
     }
 
     @Override

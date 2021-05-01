@@ -40,6 +40,14 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel {
         return uniqueInstance;
     }
 
+    public Usuari getLoggedInUser() {
+        return loggedInUser;
+    }
+
+    public void setLoggedInUser(Usuari loggedInUser) {
+        this.loggedInUser = loggedInUser;
+    }
+
     // Retorna la lista de notas
     public Note getNoteByPosition(int pos){
         return noteList.get(pos);

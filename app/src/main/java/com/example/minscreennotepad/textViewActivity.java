@@ -49,6 +49,7 @@ public class textViewActivity extends AppCompatActivity {
     public void goToMainActivity(){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        this.finish();
     }
 
     @Override
