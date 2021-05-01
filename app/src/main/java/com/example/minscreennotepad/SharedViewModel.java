@@ -19,13 +19,14 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel {
     //Lista de notas
     private Usuari loggedInUser;
     public List<Note> noteList;
-    private List<Usuari> userList;
+    private CarteraUsuaris carteraUsuaris;
     private Note noteToView;
     public static final String TAG = "ViewModel";
 
     //Constructor
     private SharedViewModel(){
         noteList = new ArrayList<>();
+        carteraUsuaris = new CarteraUsuaris();
     }
 
     public static SharedViewModel getInstance() {
@@ -64,6 +65,33 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel {
         return this.noteToView;
     }
 
+    public String loginUser(String userName, String password) {
+        String returnStatement = "Login Correcte";
+        Usuari user = carteraUsuaris.find(userName);
+        if(user != null) {
+            if (user.getPassword().equals(password)){
+                loggedInUser = user;
+                noteList = user.getNoteList();
+            }
+            else {
+                returnStatement = "Usuari/contrasenya incorrectes";
+            }
+        }
+        else {
+            returnStatement = "Usuari no existeix";
+        }
+        return returnStatement;
+    }
+
+    public String signUpUser(String userName, String passwrod) {
+        if(carteraUsuaris.signUpUser(new Usuari(userName, passwrod))) {
+            return "Usuari registrat";
+        }
+        else{
+            return "Nom d'usuari ja existeix";
+        }
+    }
+    
     // Asignamos la lista de notas a la que nos pasan
     public void DeleteNoteToView() {
         this.noteList.remove(noteToView);
