@@ -31,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void signUpButtonClicn(View view) {
+    public void signUpActivityButtonClick(View view) {
         goToSignupActivity();
     }
 
