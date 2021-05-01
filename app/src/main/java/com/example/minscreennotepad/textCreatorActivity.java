@@ -1,7 +1,6 @@
 package com.example.minscreennotepad;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -55,12 +54,12 @@ public class textCreatorActivity extends AppCompatActivity {
 
     //Guardar nota de texto
     public void saveTextNote (MenuItem item) {
-        EditText noteTitle = (EditText) findViewById(R.id.titleText);
-        EditText noteText = (EditText) findViewById(R.id.text);
+        EditText noteTitle = (EditText) findViewById(R.id.textView_titleText);
+        EditText noteText = (EditText) findViewById(R.id.text_view_text);
         if(!viewModel.isValidTitle(noteTitle.getText().toString())) {
             Toast.makeText(this, "Titulo ya usado", Toast.LENGTH_SHORT).show();
         }
-        else if(noteText.getText().toString().length() > 10) {
+        else if(noteText.getText().toString().length() > 10000) {
             Toast.makeText(this, "Nota demasiado larga", Toast.LENGTH_SHORT).show();
         }
         else{

@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/titleText"
+        android:id="@+id/textView_titleText"
         android:layout_width="343dp"
         android:layout_height="50dp"
         android:layout_marginStart="32dp"
@@ -23,7 +23,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/text"
+        android:id="@+id/text_view_text"
         android:layout_width="343dp"
         android:layout_height="450dp"
         android:layout_marginStart="32dp"
@@ -36,6 +36,6 @@
         android:inputType="textMultiLine"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titleText" />
+        app:layout_constraintTop_toBottomOf="@+id/textView_titleText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
