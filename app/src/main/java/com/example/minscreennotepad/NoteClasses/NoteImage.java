@@ -1,20 +1,27 @@
 package com.example.minscreennotepad.NoteClasses;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
+
 public class NoteImage extends Note{
 
-    String fileName;
+    Uri file;
 
-    public NoteImage(String title, String fileName) {
+    public NoteImage(String title, Uri file) {
         super(title);
-        this.fileName = fileName;
+        this.file = file;
     }
 
-    public String getFileName() {
-        return fileName;
+    public Uri getFile() {
+        return file;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setFile(Uri file) {
+        this.file = file;
+    }
+
+    public void setBitmap(Bitmap file){
+
     }
 }
 

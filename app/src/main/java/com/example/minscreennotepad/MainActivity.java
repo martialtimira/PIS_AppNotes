@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
                             Toast.makeText(view.getContext(), "Audio", Toast.LENGTH_SHORT).show();
                             break;
                         case 2:
-                            Toast.makeText(view.getContext(), "Imagen", Toast.LENGTH_SHORT).show();
+                            goToImageCreatorActivity();
                             break;
                         case 3:
                             Toast.makeText(view.getContext(), "", Toast.LENGTH_SHORT).show();
@@ -91,6 +91,17 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
                 });
         builder.create().show();
 
+    }
+
+    //Basic explicit intent to textCreatorActivity without extra data
+    private void goToImageCreatorActivity() {
+        Intent intent = new Intent(this, imageCreatorActivity.class);
+        startActivity(intent);
+    }
+
+    private void goToImageViewActivity() {
+        Intent intent = new Intent(this, imageViewActivity.class);
+        startActivity(intent);
     }
 
     //Basic explicit intent to textCreatorActivity without extra data
@@ -110,7 +121,8 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
         //Note noteSelected = noteList.get(position);
         Note noteSelected = viewModel.getNoteByPosition(position);
         if(noteSelected instanceof NoteImage) {
-            Toast.makeText(this, noteSelected.getTitle() + ": " + ((NoteImage) noteSelected).getFileName(), Toast.LENGTH_LONG).show();
+            viewModel.setNoteToView(position);
+            goToImageViewActivity();
         }
         else if(noteSelected instanceof  NoteAudio) {
             Toast.makeText(this, noteSelected.getTitle() + ": " + ((NoteAudio) noteSelected).getFileName(), Toast.LENGTH_LONG).show();
@@ -120,4 +132,5 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
             goToTextViewActivity();
         }
     }
+
 }

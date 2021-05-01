@@ -1,0 +1,115 @@
+package com.example.minscreennotepad;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.minscreennotepad.NoteClasses.NoteImage;
+import com.example.minscreennotepad.NoteClasses.NoteText;
+
+import java.io.ByteArrayOutputStream;
+
+public class imageViewActivity extends AppCompatActivity {
+    
+    private SharedViewModel viewModel;
+    
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_image_view);
+        
+        viewModel = SharedViewModel.getInstance();
+
+        getSupportActionBar().setTitle("Ver nota de texto");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        
+        setNote();
+    }
+
+    //Botón/flecha para regresar a la pantalla principal de la aplicación
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                goToMainActivity();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void goToMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater=getMenuInflater();
+        inflater.inflate(R.menu.view_image_note_menu, menu);
+        return true;
+    }
+
+    private void setNote() {
+        EditText noteTitle = (EditText) findViewById(R.id.imageTitle);
+        ImageView noteContent = (ImageView) findViewById(R.id.imageContent);
+
+        NoteImage note = (NoteImage)viewModel.getNoteToView();
+
+        noteTitle.setText(note.getTitle(), TextView.BufferType.EDITABLE);
+        noteContent.setImageURI(note.getFile());
+    }
+
+    //Guardar cambios nota de texto
+    public void saveChangesImageNote(MenuItem item) {
+        EditText noteTitle = (EditText) findViewById(R.id.imageTitle);
+        ImageView noteContent = findViewById(R.id.imageContent);
+
+        NoteImage note = (NoteImage)viewModel.getNoteToView();
+
+        note.setTitle(noteTitle.getText().toString());
+        goToMainActivity();
+    }
+
+    /*
+     *
+     * @param item
+     * Mensaje de confirmación para eliminar una nota
+     */
+    public void showDeleteDialog (MenuItem item) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Confirmación");
+        alert.setTitle("¿Seguro que quieres eliminar esta nota?");
+
+        alert.setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                viewModel.DeleteNoteToView();
+                Toast.makeText(imageViewActivity.this, "Nota eliminada", Toast.LENGTH_SHORT).show();
+                goToMainActivity();
+            }
+        });
+
+        alert.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(imageViewActivity.this, "Operación Cancelada", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        alert.create().show();
+    }
+}

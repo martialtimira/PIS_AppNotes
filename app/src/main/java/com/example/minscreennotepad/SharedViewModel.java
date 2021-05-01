@@ -1,9 +1,12 @@
 package com.example.minscreennotepad;
 
+import android.net.Uri;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.minscreennotepad.NoteClasses.Note;
+import com.example.minscreennotepad.NoteClasses.NoteImage;
 import com.example.minscreennotepad.NoteClasses.NoteText;
 
 import java.util.ArrayList;
@@ -84,4 +87,11 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel {
         return isValid;
     }
 
+    public void addImageNote(String title, Uri image) {
+        //Creamos nota de imagen a partir de los datos pasados como parametros
+        NoteImage imageNote = new NoteImage(title, image);
+        //Añadimos la nota de imagen a la lista
+        noteList.add(imageNote);
+
+    }
 }
