@@ -79,8 +79,12 @@ public class imageViewActivity extends AppCompatActivity {
         ImageView noteContent = findViewById(R.id.imageContent);
 
         NoteImage note = (NoteImage)viewModel.getNoteToView();
-
-        note.setTitle(noteTitle.getText().toString());
+        if(!viewModel.isValidTitle(noteTitle.getText().toString())) {
+            Toast.makeText(this, "Titulo ya en uso", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            note.setTitle(noteTitle.getText().toString());
+        }
         goToMainActivity();
     }
 

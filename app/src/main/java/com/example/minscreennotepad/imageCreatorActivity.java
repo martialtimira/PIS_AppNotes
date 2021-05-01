@@ -197,10 +197,14 @@ public class imageCreatorActivity extends AppCompatActivity {
 
     public void saveImageNote(MenuItem item) {
         EditText noteTitle = (EditText) findViewById(R.id.imageTitle);
-        viewModel.addImageNote(noteTitle.getText().toString(), imageUri);
-        Toast.makeText(this, "Nota guardada", Toast.LENGTH_SHORT).show();
-        goToMainActivity();
-
+        if(!viewModel.isValidTitle(noteTitle.getText().toString())) {
+            Toast.makeText(this, "Titulo ya en uso", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            viewModel.addImageNote(noteTitle.getText().toString(), imageUri);
+            Toast.makeText(this, "Nota guardada", Toast.LENGTH_SHORT).show();
+            goToMainActivity();
+        }
     }
 
     private Uri getImageUriFromBitmap(Context context, Bitmap bitmap){
