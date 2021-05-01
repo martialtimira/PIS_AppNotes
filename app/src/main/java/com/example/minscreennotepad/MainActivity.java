@@ -59,8 +59,6 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
 
     public void init() {
         viewModel = SharedViewModel.getInstance();
-        viewModel.signUpUser("marti", "123");
-        viewModel.signUpUser("joan", "123");
         if(viewModel.getLoggedInUser() == null) {
             goToLoginActivity();
         }
