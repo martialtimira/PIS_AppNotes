@@ -57,9 +57,15 @@ public class textCreatorActivity extends AppCompatActivity {
         EditText noteTitle = (EditText) findViewById(R.id.textView_titleText);
         EditText noteText = (EditText) findViewById(R.id.text_view_text);
         if(!viewModel.isValidTitle(noteTitle.getText().toString())) {
+            //cambiar a dialog
             Toast.makeText(this, "Titulo ya usado", Toast.LENGTH_SHORT).show();
         }
+        else if (noteTitle.getText().toString().isEmpty()) {
+            //cambiar a dialog
+            Toast.makeText(this, "Titulo no puede estar vacío", Toast.LENGTH_SHORT).show();
+        }
         else if(noteText.getText().toString().length() > 10000) {
+            //cambiar a dialog
             Toast.makeText(this, "Nota demasiado larga", Toast.LENGTH_SHORT).show();
         }
         else{

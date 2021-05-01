@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
                     switch (which) {
                         case 0:
                             goToTextCreatorActivity();
+                            System.out.println("yo");
                             break;
                         case 1:
                             Toast.makeText(view.getContext(), "Audio", Toast.LENGTH_SHORT).show();
