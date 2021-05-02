@@ -44,7 +44,7 @@ public class imageViewActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                showReturnDialog(android.R.id.home);
+                this.showBackDialog();
                 //goToMainActivity();
                 return true;
             default:
@@ -100,10 +100,10 @@ public class imageViewActivity extends AppCompatActivity {
     //Guardar cambios nota de texto
     public void saveChangesImageNote(MenuItem item) {
         EditText noteTitle = (EditText) findViewById(R.id.imageTitle);
-        ImageView noteContent = findViewById(R.id.imageContent);
-
         NoteImage note = (NoteImage)viewModel.getNoteToView();
-        if(!viewModel.isValidTitle(noteTitle.getText().toString())) {
+
+        if(!viewModel.isValidTitle(noteTitle.getText().toString()) &&
+                !noteTitle.getText().toString().equals(note.getTitle())) {
             sameTitleDialog();
         }
         else if(noteTitle.getText().toString().isEmpty()){
@@ -111,7 +111,6 @@ public class imageViewActivity extends AppCompatActivity {
         }
         else {
             note.setTitle(noteTitle.getText().toString());
-            goToMainActivity();
         }
     }
 
@@ -144,7 +143,7 @@ public class imageViewActivity extends AppCompatActivity {
         alert.create().show();
     }
 
-    public void sameTitleDialog() {
+    private void sameTitleDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Error.");
         alert.setTitle("El título ya está en uso.");
@@ -158,7 +157,7 @@ public class imageViewActivity extends AppCompatActivity {
         alert.create().show();
     }
 
-    public void nullTitleDialog() {
+    private void nullTitleDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Error.");
         alert.setTitle("El título está vacío.");
@@ -178,49 +177,55 @@ public class imageViewActivity extends AppCompatActivity {
      * @param item
      * Mensaje de confirmación para eliminar una nota
      */
-    public void showBackDialog () {
+    private void showBackDialog() {
         EditText noteTitle = (EditText) findViewById(R.id.imageTitle);
         NoteImage note = (NoteImage)viewModel.getNoteToView();
 
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("Confirmación");
-        alert.setTitle("¿Quieres guardar los cambios?");
+        if(!noteTitle.getText().toString().equals(note.getTitle())) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("Confirmación");
+            alert.setTitle("¿Quieres guardar los cambios?");
 
-        alert.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if(!viewModel.isValidTitle(noteTitle.getText().toString())) {
-                    //cambiar a dialog
-                    Toast.makeText(imageViewActivity.this, "Titulo ya usado", Toast.LENGTH_SHORT).show();
+            alert.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if(!viewModel.isValidTitle(noteTitle.getText().toString()) &&
+                            !noteTitle.getText().toString().equals(note.getTitle())) {
+                        //cambiar a dialog
+                        sameTitleDialog();
+                    }
+                    else if (noteTitle.getText().toString().isEmpty()) {
+                        //cambiar a dialog
+                        nullTitleDialog();
+                    }
+                    else{
+                        note.setTitle(noteTitle.getText().toString());
+                        Toast.makeText(imageViewActivity.this, "Cambios guardados", Toast.LENGTH_SHORT).show();
+                        goToMainActivity();
+                    }
                 }
-                else if (noteTitle.getText().toString().isEmpty()) {
-                    //cambiar a dialog
-                    Toast.makeText(imageViewActivity.this, "Titulo no puede estar vacío", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    note.setTitle(noteTitle.getText().toString());
-                    Toast.makeText(imageViewActivity.this, "Cambios guardados", Toast.LENGTH_SHORT).show();
+            });
+
+            alert.setNegativeButton("No guardar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Toast.makeText(imageViewActivity.this, "Cambios no guardados", Toast.LENGTH_SHORT).show();
                     goToMainActivity();
                 }
-            }
-        });
+            });
 
-        alert.setNegativeButton("No guardar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(imageViewActivity.this, "Cambios no guardados", Toast.LENGTH_SHORT).show();
-                goToMainActivity();
-            }
-        });
+            alert.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                }
+            });
 
-        alert.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(imageViewActivity.this, "Acción cancelada", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        alert.create().show();
+            alert.create().show();
+        }
+        //Si no hay cambios, volvemos directamente a MainActivity
+        else{
+            goToMainActivity();
+        }
 
 
     }

@@ -34,7 +34,7 @@ public class textCreatorActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                showBackDialog();
+                showReturnDialog();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -60,16 +60,13 @@ public class textCreatorActivity extends AppCompatActivity {
         EditText noteTitle = (EditText) findViewById(R.id.textView_titleText);
         EditText noteText = (EditText) findViewById(R.id.text_view_text);
         if(!viewModel.isValidTitle(noteTitle.getText().toString())) {
-            //cambiar a dialog
-            Toast.makeText(this, "Titulo ya usado", Toast.LENGTH_SHORT).show();
+            sameTitleDialog();
         }
         else if (noteTitle.getText().toString().isEmpty()) {
-            //cambiar a dialog
-            Toast.makeText(this, "Titulo no puede estar vacío", Toast.LENGTH_SHORT).show();
+            nullTitleDialog();
         }
         else if(noteText.getText().toString().length() > 10000) {
-            //cambiar a dialog
-            Toast.makeText(this, "Nota demasiado larga", Toast.LENGTH_SHORT).show();
+            tooLongDialog();
         }
         else{
             viewModel.addTextNote( noteTitle.getText().toString(),  noteText.getText().toString());
@@ -78,57 +75,67 @@ public class textCreatorActivity extends AppCompatActivity {
         }
     }
 
-    /*
-     *
-     * @param item
-     * Mensaje de confirmación para eliminar una nota
-     */
-    public void showBackDialog () {
+    public void showReturnDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("Confirmación");
-        alert.setTitle("¿Quieres guardar esta nota?");
+        alert.setTitle("Confirmación.");
+        alert.setTitle("¿Seguro que quieres salir?");
 
-        EditText noteTitle = (EditText) findViewById(R.id.textView_titleText);
-        EditText noteText = (EditText) findViewById(R.id.text_view_text);
-
-        alert.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
+        alert.setPositiveButton("Salir.", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if(!viewModel.isValidTitle(noteTitle.getText().toString())) {
-                    //cambiar a dialog
-                    Toast.makeText(textCreatorActivity.this, "Titulo ya usado", Toast.LENGTH_SHORT).show();
-                }
-                else if (noteTitle.getText().toString().isEmpty()) {
-                    //cambiar a dialog
-                    Toast.makeText(textCreatorActivity.this, "Titulo no puede estar vacío", Toast.LENGTH_SHORT).show();
-                }
-                else if(noteText.getText().toString().length() > 10000) {
-                    //cambiar a dialog
-                    Toast.makeText(textCreatorActivity.this, "Nota demasiado larga", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    viewModel.addTextNote( noteTitle.getText().toString(),  noteText.getText().toString());
-                    Toast.makeText(textCreatorActivity.this, "Nota guardada", Toast.LENGTH_SHORT).show();
-                    goToMainActivity();
-                }
-            }
-        });
-
-        alert.setNegativeButton("No guardar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(textCreatorActivity.this, "Nota eliminada", Toast.LENGTH_SHORT).show();
                 goToMainActivity();
             }
         });
 
-        alert.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
+        alert.setNegativeButton("Cancelar.", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(textCreatorActivity.this, "Acción cancelada", Toast.LENGTH_SHORT).show();
+                Toast.makeText(textCreatorActivity.this, "Operación cancelada.", Toast.LENGTH_SHORT).show();
             }
         });
 
+        alert.create().show();
+    }
+
+    private void sameTitleDialog() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Error.");
+        alert.setTitle("El título ya está en uso.");
+
+        alert.setPositiveButton("Aceptar.", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        alert.create().show();
+    }
+
+    private void tooLongDialog() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Error.");
+        alert.setTitle("La nota supera los 10.000 carácteres");
+
+        alert.setPositiveButton("Aceptar.", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        alert.create().show();
+    }
+
+    private void nullTitleDialog() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Error.");
+        alert.setTitle("El título está vacío.");
+
+        alert.setPositiveButton("Aceptar.", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
         alert.create().show();
     }
 }

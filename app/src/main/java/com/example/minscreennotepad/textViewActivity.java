@@ -77,10 +77,18 @@ public class textViewActivity extends AppCompatActivity {
 
         NoteText note = (NoteText)viewModel.getNoteToView();
 
-        note.setTitle(noteTitle.getText().toString());
-        note.setBody(noteText.getText().toString());
-
-        Toast.makeText(this, "Cambios guardados", Toast.LENGTH_SHORT).show();
+        if(!viewModel.isValidTitle(noteTitle.getText().toString()) &&
+                !noteTitle.getText().toString().equals(note.getTitle())) {
+            sameTitleDialog();
+        }
+        else if(noteTitle.getText().toString().isEmpty()){
+            nullTitleDialog();
+        }
+        else {
+            note.setTitle(noteTitle.getText().toString());
+            note.setBody(noteText.getText().toString());
+            Toast.makeText(this, "Cambios guardados", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /*
@@ -117,7 +125,7 @@ public class textViewActivity extends AppCompatActivity {
      * @param item
      * Mensaje de confirmación para eliminar una nota
      */
-    public void showBackDialog () {
+    public void showBackDialog() {
         EditText noteTitle = (EditText) findViewById(R.id.textView_titleText);
         EditText noteText = (EditText) findViewById(R.id.text_view_text);
         NoteText note = (NoteText)viewModel.getNoteToView();
@@ -131,17 +139,18 @@ public class textViewActivity extends AppCompatActivity {
             alert.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    if(!viewModel.isValidTitle(noteTitle.getText().toString())) {
+                    if(!viewModel.isValidTitle(noteTitle.getText().toString()) &&
+                            !noteTitle.getText().toString().equals(note.getTitle())) {
                         //cambiar a dialog
-                        Toast.makeText(textViewActivity.this, "Titulo ya usado", Toast.LENGTH_SHORT).show();
+                        sameTitleDialog();
                     }
                     else if (noteTitle.getText().toString().isEmpty()) {
                         //cambiar a dialog
-                        Toast.makeText(textViewActivity.this, "Titulo no puede estar vacío", Toast.LENGTH_SHORT).show();
+                        nullTitleDialog();
                     }
                     else if(noteText.getText().toString().length() > 10000) {
                         //cambiar a dialog
-                        Toast.makeText(textViewActivity.this, "Nota demasiado larga", Toast.LENGTH_SHORT).show();
+                        tooLongDialog();
                     }
                     else{
                         note.setTitle(noteTitle.getText().toString());
@@ -173,6 +182,48 @@ public class textViewActivity extends AppCompatActivity {
         else{
             goToMainActivity();
         }
+    }
+
+    private void sameTitleDialog() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Error.");
+        alert.setTitle("El título ya está en uso.");
+
+        alert.setPositiveButton("Aceptar.", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        alert.create().show();
+    }
+
+    private void tooLongDialog() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Error.");
+        alert.setTitle("La nota supera los 10.000 carácteres");
+
+        alert.setPositiveButton("Aceptar.", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        alert.create().show();
+    }
+
+    private void nullTitleDialog() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Error.");
+        alert.setTitle("El título está vacío.");
+
+        alert.setPositiveButton("Aceptar.", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        alert.create().show();
     }
 
 }

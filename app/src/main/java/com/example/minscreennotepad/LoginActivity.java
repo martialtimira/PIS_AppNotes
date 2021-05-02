@@ -1,7 +1,9 @@
 package com.example.minscreennotepad;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -27,7 +29,7 @@ public class LoginActivity extends AppCompatActivity {
             goToMainActivity();
         }
         else {
-            Toast.makeText(view.getContext(), loginStatus, Toast.LENGTH_SHORT).show();
+            loginErrorDialog(loginStatus);
         }
     }
 
@@ -44,5 +46,19 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         this.finish();
+    }
+
+    private void loginErrorDialog(String loginStatus) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Error.");
+        alert.setTitle(loginStatus);
+
+        alert.setPositiveButton("Aceptar.", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        alert.create().show();
     }
 }

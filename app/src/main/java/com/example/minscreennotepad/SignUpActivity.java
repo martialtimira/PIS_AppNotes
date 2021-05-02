@@ -1,7 +1,9 @@
 package com.example.minscreennotepad;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -41,6 +43,34 @@ public class SignUpActivity extends AppCompatActivity {
         startActivity(intent);
         this.finish();
     }
+    private void passwordsDontMatchDialog() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Error.");
+        alert.setTitle("Las contraseñas no coinciden");
+
+        alert.setPositiveButton("Aceptar.", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        alert.create().show();
+    }
+
+    private void emptyFieldsDialog() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Error.");
+        alert.setTitle("Hay campos vacíos");
+
+        alert.setPositiveButton("Aceptar.", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        alert.create().show();
+    }
+
 
     public void signUpUserButtonClick(View view) {
         EditText userName = (EditText) findViewById(R.id.signupUsername_textEdit);
@@ -49,7 +79,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         if(userName.getText().toString().equals("") || passwodR.getText().toString().equals("") ||
                 password.getText().toString().equals("")) {
-            Toast.makeText(view.getContext(), "Hay campos vacíos.", Toast.LENGTH_SHORT).show();
+            emptyFieldsDialog();
         }
         else {
             if (password.getText().toString().equals(passwodR.getText().toString())) {
@@ -60,7 +90,7 @@ public class SignUpActivity extends AppCompatActivity {
                     Toast.makeText(view.getContext(), signupStatus, Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(view.getContext(), "Las contraseñas no coinciden.", Toast.LENGTH_SHORT).show();
+                passwordsDontMatchDialog();
             }
         }
     }
