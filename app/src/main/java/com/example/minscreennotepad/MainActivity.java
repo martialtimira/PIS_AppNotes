@@ -46,9 +46,6 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
             case R.id.logout:
                 logout();
                 return true;
-            case R.id.delete:
-                Toast.makeText(this, "delete     selected", Toast.LENGTH_SHORT).show();
-                return true;
         }
         return super.onOptionsItemSelected(item);
     }
