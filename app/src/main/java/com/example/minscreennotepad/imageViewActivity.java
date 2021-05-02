@@ -100,7 +100,6 @@ public class imageViewActivity extends AppCompatActivity {
     //Guardar cambios nota de texto
     public void saveChangesImageNote(MenuItem item) {
         EditText noteTitle = (EditText) findViewById(R.id.imageTitle);
-        ImageView noteContent = findViewById(R.id.imageContent);
 
         NoteImage note = (NoteImage)viewModel.getNoteToView();
         if(!viewModel.isValidTitle(noteTitle.getText().toString())) {

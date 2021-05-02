@@ -9,8 +9,6 @@ import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ContentProvider;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,24 +17,17 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class imageCreatorActivity extends AppCompatActivity {
 
@@ -156,7 +147,7 @@ public class imageCreatorActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                showReturnDialog(android.R.id.home);
+                showReturnDialog();
                 //goToMainActivity();
                 return true;
             default:
@@ -164,7 +155,7 @@ public class imageCreatorActivity extends AppCompatActivity {
         }
     }
 
-    public void showReturnDialog(int item) {
+    public void showReturnDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Confirmación");
         alert.setTitle("¿Seguro que quieres salir?");
