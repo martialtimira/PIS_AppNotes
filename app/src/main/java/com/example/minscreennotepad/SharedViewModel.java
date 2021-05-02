@@ -2,6 +2,9 @@ package com.example.minscreennotepad;
 
 import android.net.Uri;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import com.example.minscreennotepad.NoteClasses.Note;
 import com.example.minscreennotepad.NoteClasses.NoteImage;
 import com.example.minscreennotepad.NoteClasses.NoteText;
@@ -60,20 +63,18 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel {
         this.noteList=noteList;
     }
 
+    // Asignamos la lista de notas a la que nos pasan
     public void setNoteToView(int notePosition) {
         this.noteToView=noteList.get(notePosition);
     }
 
+    // Asignamos la lista de notas a la que nos pasan
     public Note getNoteToView() {
         return this.noteToView;
     }
 
-    public void DeleteNoteToView() {
-        this.noteList.remove(noteToView);
-    }
-
     public String loginUser(String userName, String password) {
-        String returnStatement = "Login Correcte";
+        String returnStatement = "Inicio de sesión correcto.";
         User user = carteraUsuaris.find(userName);
         if(user != null) {
             if (user.getPassword().equals(password)){
@@ -81,22 +82,27 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel {
                 noteList = user.getNoteList();
             }
             else {
-                returnStatement = "Usuari/contrasenya incorrectes";
+                returnStatement = "Usuario/contraseña incorrectos.";
             }
         }
         else {
-            returnStatement = "Usuari no existeix";
+            returnStatement = "Usuario no existe.";
         }
         return returnStatement;
     }
 
     public String signUpUser(String userName, String passwrod) {
         if(carteraUsuaris.signUpUser(new User(userName, passwrod))) {
-            return "Usuari registrat";
+            return "Usuario registrado.";
         }
         else{
-            return "Nom d'usuari ja existeix";
+            return "El nombre de usuario ya existe.";
         }
+    }
+    
+    // Asignamos la lista de notas a la que nos pasan
+    public void DeleteNoteToView() {
+        this.noteList.remove(noteToView);
     }
 
     // Añadir nota de texto a la lista
@@ -107,14 +113,6 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel {
         noteList.add(textNote);
     }
 
-    public void addImageNote(String title, Uri image) {
-        //Creamos nota de imagen a partir de los datos pasados como parametros
-        NoteImage imageNote = new NoteImage(title, image);
-        //Añadimos la nota de imagen a la lista
-        noteList.add(imageNote);
-
-    }
-
     public boolean isValidTitle(String title) {
         boolean isValid = true;
         for (Note n: noteList) {
@@ -123,5 +121,13 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel {
             }
         }
         return isValid;
+    }
+
+    public void addImageNote(String title, Uri image) {
+        //Creamos nota de imagen a partir de los datos pasados como parametros
+        NoteImage imageNote = new NoteImage(title, image);
+        //Añadimos la nota de imagen a la lista
+        noteList.add(imageNote);
+
     }
 }

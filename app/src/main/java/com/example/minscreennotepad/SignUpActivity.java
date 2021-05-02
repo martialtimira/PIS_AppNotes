@@ -18,7 +18,7 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
         viewModel = SharedViewModel.getInstance();
 
-        getSupportActionBar().setTitle("Sign up");
+        getSupportActionBar().setTitle("Registrarse.");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
@@ -49,18 +49,18 @@ public class SignUpActivity extends AppCompatActivity {
 
         if(userName.getText().toString().equals("") || passwodR.getText().toString().equals("") ||
                 password.getText().toString().equals("")) {
-            Toast.makeText(view.getContext(), "Hi ha camps buits", Toast.LENGTH_SHORT).show();
+            Toast.makeText(view.getContext(), "Hay campos vacíos.", Toast.LENGTH_SHORT).show();
         }
         else {
             if (password.getText().toString().equals(passwodR.getText().toString())) {
                 String signupStatus = viewModel.signUpUser(userName.getText().toString(), password.getText().toString());
-                if (signupStatus.equals("Usuari registrat")) {
+                if (signupStatus.equals("Usuario registrado.")) {
                     this.finish();
                 } else {
                     Toast.makeText(view.getContext(), signupStatus, Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(view.getContext(), "Contrasenya no coincideix", Toast.LENGTH_SHORT).show();
+                Toast.makeText(view.getContext(), "Las contraseñas no coinciden.", Toast.LENGTH_SHORT).show();
             }
         }
     }

@@ -89,10 +89,12 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
     public void addNoteButtonClick(View view) {
         viewModel = SharedViewModel.getInstance();
         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-        builder.setTitle("¿Que tipo de nota quieres crear?");
+        builder.setTitle("¿Qué tipo de nota quieres crear?");
         builder.setItems(new CharSequence[]
-                        {"Texto", "Audio", "Imagen"},
+                        {"Texto.", "Audio.", "Imagen."},
                 (dialog, which) -> {
+                    // The 'which' argument contains the index position
+                    // of the selected item
                     switch (which) {
                         case 0:
                             goToTextCreatorActivity();
@@ -102,6 +104,9 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
                             break;
                         case 2:
                             goToImageCreatorActivity();
+                            break;
+                        case 3:
+                            Toast.makeText(view.getContext(), "", Toast.LENGTH_SHORT).show();
                             break;
                     }
                 });
@@ -160,4 +165,5 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
             goToTextViewActivity();
         }
     }
+
 }

@@ -44,11 +44,34 @@ public class imageViewActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                showBackDialog();
+                showReturnDialog(android.R.id.home);
+                //goToMainActivity();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void showReturnDialog(int item) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Confirmación.");
+        alert.setTitle("¿Seguro que quieres salir?");
+
+        alert.setPositiveButton("Salir.", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                goToMainActivity();
+            }
+        });
+
+        alert.setNegativeButton("Cancelar.", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(imageViewActivity.this, "Operación cancelada.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        alert.create().show();
     }
 
     private void goToMainActivity() {
@@ -81,7 +104,10 @@ public class imageViewActivity extends AppCompatActivity {
 
         NoteImage note = (NoteImage)viewModel.getNoteToView();
         if(!viewModel.isValidTitle(noteTitle.getText().toString())) {
-            Toast.makeText(this, "Titulo ya en uso", Toast.LENGTH_SHORT).show();
+            sameTitleDialog();
+        }
+        else if(noteTitle.getText().toString().isEmpty()){
+            nullTitleDialog();
         }
         else {
             note.setTitle(noteTitle.getText().toString());
@@ -96,25 +122,53 @@ public class imageViewActivity extends AppCompatActivity {
      */
     public void showDeleteDialog (MenuItem item) {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("Confirmación");
+        alert.setTitle("Confirmación.");
         alert.setTitle("¿Seguro que quieres eliminar esta nota?");
 
-        alert.setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
+        alert.setPositiveButton("Eliminar.", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 viewModel.DeleteNoteToView();
-                Toast.makeText(imageViewActivity.this, "Nota eliminada", Toast.LENGTH_SHORT).show();
+                Toast.makeText(imageViewActivity.this, "Nota eliminada.", Toast.LENGTH_SHORT).show();
                 goToMainActivity();
             }
         });
 
-        alert.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+        alert.setNegativeButton("Cancelar.", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(imageViewActivity.this, "Operación Cancelada", Toast.LENGTH_SHORT).show();
+                Toast.makeText(imageViewActivity.this, "Operación cancelada.", Toast.LENGTH_SHORT).show();
             }
         });
 
+        alert.create().show();
+    }
+
+    public void sameTitleDialog() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Error.");
+        alert.setTitle("El título ya está en uso.");
+
+        alert.setPositiveButton("Aceptar.", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        alert.create().show();
+    }
+
+    public void nullTitleDialog() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Error.");
+        alert.setTitle("El título está vacío.");
+
+        alert.setPositiveButton("Aceptar.", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
         alert.create().show();
     }
 
@@ -170,4 +224,6 @@ public class imageViewActivity extends AppCompatActivity {
 
 
     }
+
+
 }
