@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
                             goToTextCreatorActivity();
                             break;
                         case 1:
-                            Toast.makeText(view.getContext(), "Audio", Toast.LENGTH_SHORT).show();
+                            goToAudioCreatorActivity();
                             break;
                         case 2:
                             goToImageCreatorActivity();
@@ -110,9 +110,20 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
         startActivity(intent);
     }
 
-    //Basic explicit intent to textCreatorActivity without extra data
+    //Basic explicit intent to textViewActivity without extra data
     public void goToTextViewActivity(){
         Intent intent = new Intent(this, textViewActivity.class);
+        startActivity(intent);
+    }
+    //Basic explicit intent to audioCreatorActivity without extra data
+    public void goToAudioCreatorActivity(){
+        Intent intent = new Intent(this, audioCreatorActivity.class);
+        startActivity(intent);
+    }
+
+    //Basic explicit intent to audioViewActivity without extra data
+    public void goToAudioViewActivity(){
+        Intent intent = new Intent(this, audioViewActivity.class);
         startActivity(intent);
     }
 
@@ -125,7 +136,8 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
             goToImageViewActivity();
         }
         else if(noteSelected instanceof  NoteAudio) {
-            Toast.makeText(this, noteSelected.getTitle() + ": " + ((NoteAudio) noteSelected).getFileName(), Toast.LENGTH_LONG).show();
+            viewModel.setNoteToView(position);
+            goToAudioViewActivity();
         }
         else if(noteSelected instanceof NoteText){
             viewModel.setNoteToView(position);

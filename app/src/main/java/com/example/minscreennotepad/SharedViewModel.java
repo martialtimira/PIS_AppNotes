@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.minscreennotepad.NoteClasses.Note;
+import com.example.minscreennotepad.NoteClasses.NoteAudio;
 import com.example.minscreennotepad.NoteClasses.NoteImage;
 import com.example.minscreennotepad.NoteClasses.NoteText;
 
@@ -93,5 +94,12 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel {
         //Añadimos la nota de imagen a la lista
         noteList.add(imageNote);
 
+    }
+    // Añadir nota de audio a la lista
+    public void addAudioNote(String title, String filePath, long fileLenght){
+        // Creamos nota de audio a partir de los datos pasados como parametros
+        NoteAudio audioNote = new NoteAudio(title, filePath, fileLenght);
+        // Añadimos nota de audio a la lista
+        noteList.add(audioNote);
     }
 }
