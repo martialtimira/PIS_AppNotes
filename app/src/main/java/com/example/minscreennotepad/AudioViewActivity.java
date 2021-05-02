@@ -112,28 +112,10 @@ public class AudioViewActivity extends AppCompatActivity {
         }
     }
 
-    private void showReturnDialog() {
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("Confirmación.");
-        alert.setTitle("¿Seguro que quieres salir?");
-
-        alert.setPositiveButton("Salir.", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                goToMainActivity();
-            }
-        });
-
-        alert.setNegativeButton("Cancelar.", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(AudioViewActivity.this, "Operación Cancelada.", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        alert.create().show();
-    }
-
+    /**
+     * Muestra un diálogo al usuario preguntando si quiere guardar o descartar los cambios en la nota,
+     * o cancelar la acción actual.
+     */
     private void showBackDialog() {
         EditText noteTitle = (EditText) findViewById(R.id.audio_title);
         NoteAudio note = (NoteAudio) viewModel.getNoteToView();
@@ -185,7 +167,9 @@ public class AudioViewActivity extends AppCompatActivity {
         }
     }
 
-    //Basic explicit intent to MainActivity without extra data
+    /**
+     * Envia al usuario a la MainActivity
+     */
     public void goToMainActivity(){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
@@ -198,7 +182,9 @@ public class AudioViewActivity extends AppCompatActivity {
         return true;
     }
 
-    //Inicializamos los elementos que manipularemos
+    /**
+     * Inicializa los elementos del layout y los rellena con los parámetros de la nota a mostrar
+     */
     public void setNote(){
         EditText audioTitle = (EditText) findViewById(R.id.audio_title);
 
@@ -217,7 +203,9 @@ public class AudioViewActivity extends AppCompatActivity {
 
     }
 
-    //Guardar cambios nota de texto
+    /**
+     * Guarda cambios en la nota de audio
+     */
     public void saveChangesAudioNote(MenuItem item) {
         EditText audioTitle = (EditText) findViewById(R.id.audio_title);
         NoteAudio noteAudio = (NoteAudio)viewModel.getNoteToView();
@@ -234,10 +222,9 @@ public class AudioViewActivity extends AppCompatActivity {
         }
     }
 
-    /*
-     *
-     * @param item
-     * Mensaje de confirmación para eliminar una nota
+
+    /**
+     * Muestra un diálogo preguntando al usuario si está seguro de querer borrar la nota
      */
     public void showDeleteDialog (MenuItem item) {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -262,7 +249,10 @@ public class AudioViewActivity extends AppCompatActivity {
 
         alert.create().show();
     }
-    //updating mSeekBar
+
+    /**
+     * updating mSeekbar
+     */
     private Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
@@ -281,9 +271,16 @@ public class AudioViewActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * Actualiza la SeekBar
+     */
     private void updateSeekBar() {
         mHandler.postDelayed(mRunnable, 1000);
     }
+
+    /**
+     * Pausa la reproducción de audio
+     */
     @Override
     public void onPause() {
         super.onPause();
@@ -302,7 +299,10 @@ public class AudioViewActivity extends AppCompatActivity {
         }
     }
 
-    // Play start/stop
+    /**
+     * Acciones realizadas al inicar la reproducción del audio
+     * @param isPlaying Boolean que verifica si se está reproduciendo
+     */
     private void onPlay(boolean isPlaying){
         if (!isPlaying) {
             //currently MediaPlayer is not playing audio
@@ -318,6 +318,9 @@ public class AudioViewActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Inicia la reproducción del audio
+     */
     private void startPlaying() {
         playBtn.setImageResource(R.drawable.ic_media_pause);
         mMediaPlayer = new MediaPlayer();
@@ -348,6 +351,10 @@ public class AudioViewActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Prepara el reproductior para iniciar desde un punto en concreto del audio
+     * @param progress int indicando el punto donde se quiere empezar a reproducir
+     */
     private void prepareMediaPlayerFromPoint(int progress) {
         //set mediaPlayer to start from middle of the audio file
 
@@ -372,12 +379,19 @@ public class AudioViewActivity extends AppCompatActivity {
 
 
     }
+
+    /**
+     * Pausa la reproducción del audio
+     */
     private void pausePlaying() {
         playBtn.setImageResource(R.drawable.ic_media_play);
         mHandler.removeCallbacks(mRunnable);
         mMediaPlayer.pause();
     }
 
+    /**
+     * Reanuda la reproducción del audio
+     */
     private void resumePlaying() {
         playBtn.setImageResource(R.drawable.ic_media_pause);
         mHandler.removeCallbacks(mRunnable);
@@ -385,6 +399,9 @@ public class AudioViewActivity extends AppCompatActivity {
         updateSeekBar();
     }
 
+    /**
+     * Para la reproducción del audio
+     */
     private void stopPlaying() {
         playBtn.setImageResource(R.drawable.ic_media_play);
         mHandler.removeCallbacks(mRunnable);
@@ -400,6 +417,11 @@ public class AudioViewActivity extends AppCompatActivity {
         mSeekBar.setProgress(mSeekBar.getMax());
 
     }
+
+    /**
+     * Muestra un diálogo al usuario indicandole que el título que ha elegido para la nota ya
+     * está siendo usado por otra nota
+     */
     public void sameTitleDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Error.");

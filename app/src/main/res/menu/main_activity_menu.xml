@@ -6,8 +6,4 @@
         android:icon="@drawable/triple_dot_option_icon"
         android:title="Log out"
         app:showAsAction="never"/>
-
-    <item android:id="@+id/delete"
-        android:title="Delete note"
-        app:showAsAction="never"/>
 </menu>

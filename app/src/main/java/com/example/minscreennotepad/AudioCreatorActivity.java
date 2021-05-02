@@ -71,17 +71,26 @@ public class AudioCreatorActivity extends AppCompatActivity {
 
 
     }
+
+    /**
+     * Metodo de selección de item del menú de la barra de herramientas
+     * @param item Item del menú que ha sido seleccionado
+     * @return true, si se ha ejecutado correctamente
+     */
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 showRetornDialog();
-                //goToMainActivity();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    /**
+     * Muestra un dialogo al usuario pidiendo confirmación de que se quiere volver a la actividad
+     * anterior
+     */
     private void showRetornDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Confirmación.");
@@ -104,7 +113,9 @@ public class AudioCreatorActivity extends AppCompatActivity {
         alert.create().show();
     }
 
-    //Basic explicit intent to MainActivity without extra data
+    /**
+     * Devuelve al usuario a la MainActivity
+     */
     public void goToMainActivity(){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
@@ -116,7 +127,7 @@ public class AudioCreatorActivity extends AppCompatActivity {
         inflater.inflate(R.menu.create_audio_note_menu, menu);
         return true;
     }
-    // Requesting permission to RECORD_AUDIO
+
     private boolean permissionToRecordAccepted = false;
     private String [] permissions = {Manifest.permission.RECORD_AUDIO};
 
@@ -132,7 +143,10 @@ public class AudioCreatorActivity extends AppCompatActivity {
 
     }
 
-    //Guardar nota de audio
+    /**
+     * Guarda verifica que una nota de audio cumpla los requisitos y la guarda en la lista de notas
+     * @param item Item del menú seleccionado
+     */
     public void saveAudioNote (MenuItem item) {
         EditText audioT = (EditText) findViewById(R.id.audio_title);
         if(!viewModel.isValidTitle(audioT.getText().toString())) {
@@ -153,8 +167,10 @@ public class AudioCreatorActivity extends AppCompatActivity {
 
     }
 
-
-
+    /**
+     * Empieza a grabar Audio
+     * @param start Boolean que indica si empieza
+     */
     private void onRecord(boolean start){
         if (start) {
             // grabar
@@ -202,6 +218,11 @@ public class AudioCreatorActivity extends AppCompatActivity {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
     }
+
+    /**
+     * Muestra una ventana de dialogo indicando que el título de la nota ya está en siendo usado por
+     * otra.
+     */
     public void sameTitleDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Error");
@@ -216,6 +237,9 @@ public class AudioCreatorActivity extends AppCompatActivity {
         alert.create().show();
     }
 
+    /**
+     * Muestra una ventana de dialogo indicando que el parámetro del título de la nota está vacío
+     */
     public void nullTitleDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Error.");
@@ -230,6 +254,10 @@ public class AudioCreatorActivity extends AppCompatActivity {
         alert.create().show();
     }
 
+    /**
+     * Muestra una ventana de dialogo indicando que el parámetro del archivo de audio
+     * de la nota está vacío
+     */
     public void nullContentDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Error.");
