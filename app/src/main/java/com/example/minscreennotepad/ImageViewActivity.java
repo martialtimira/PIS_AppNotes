@@ -40,35 +40,15 @@ public class ImageViewActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 this.showBackDialog();
-                //goToMainActivity();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    public void showReturnDialog(int item) {
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("Confirmación.");
-        alert.setTitle("¿Seguro que quieres salir?");
-
-        alert.setPositiveButton("Salir.", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                goToMainActivity();
-            }
-        });
-
-        alert.setNegativeButton("Cancelar.", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(ImageViewActivity.this, "Operación cancelada.", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        alert.create().show();
-    }
-
+    /**
+     * Navega a la MainActivity
+     */
     private void goToMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
@@ -82,6 +62,9 @@ public class ImageViewActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Rellena los elementos del layout a partir de los parámetros de la nota a visualizar
+     */
     private void setNote() {
         EditText noteTitle = (EditText) findViewById(R.id.imageTitle);
         ImageView noteContent = (ImageView) findViewById(R.id.imageContent);
@@ -92,7 +75,9 @@ public class ImageViewActivity extends AppCompatActivity {
         noteContent.setImageURI(note.getFile());
     }
 
-    //Guardar cambios nota de texto
+    /**
+     * Guarda los cambios realizados a la nota
+     */
     public void saveChangesImageNote(MenuItem item) {
         EditText noteTitle = (EditText) findViewById(R.id.imageTitle);
         NoteImage note = (NoteImage)viewModel.getNoteToView();
@@ -109,10 +94,8 @@ public class ImageViewActivity extends AppCompatActivity {
         }
     }
 
-    /*
-     *
-     * @param item
-     * Mensaje de confirmación para eliminar una nota
+    /**
+     * Muestra un diálogo al usuario preguntandole si quiere eliminar la nota.
      */
     public void showDeleteDialog (MenuItem item) {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -138,6 +121,9 @@ public class ImageViewActivity extends AppCompatActivity {
         alert.create().show();
     }
 
+    /**
+     * Muestra un diálogo avisando al usuario de que el título de la nota ya está en uso por otra
+     */
     private void sameTitleDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Error.");
@@ -152,6 +138,9 @@ public class ImageViewActivity extends AppCompatActivity {
         alert.create().show();
     }
 
+    /**
+     * Muestra un diálogo avisando al usuario de que el parámetro del título está vacío
+     */
     private void nullTitleDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Error.");
@@ -166,11 +155,9 @@ public class ImageViewActivity extends AppCompatActivity {
         alert.create().show();
     }
 
-
-    /*
-     *
-     * @param item
-     * Mensaje de confirmación para eliminar una nota
+    /**
+     * Muestra un diálogo al usuario preguntando si quiere guardar o descartar los cambios en la nota,
+     * o cancelar la acción actual.
      */
     private void showBackDialog() {
         EditText noteTitle = (EditText) findViewById(R.id.imageTitle);

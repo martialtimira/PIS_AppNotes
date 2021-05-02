@@ -36,12 +36,18 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
-    //Basic explicit intent to LoginActivity without extra data
+    /**
+     * Navega a LoginActivity
+     */
     private void goToLoginctivity(){
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         this.finish();
     }
+
+    /**
+     * Muestra un diálogo al usuario avisándole de que las contraseñas introducidas no concuerdan
+     */
     private void passwordsDontMatchDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Error.");
@@ -56,6 +62,9 @@ public class SignUpActivity extends AppCompatActivity {
         alert.create().show();
     }
 
+    /**
+     * Muestra un diálogo al usuario avisándole de que hay campos sin completar
+     */
     private void emptyFieldsDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Error.");
@@ -70,7 +79,9 @@ public class SignUpActivity extends AppCompatActivity {
         alert.create().show();
     }
 
-
+    /**
+     * Se ejecuta al hacer click en el botón de "SignUp" y intenta registrar un nuevo usuario
+     */
     public void signUpUserButtonClick(View view) {
         EditText userName = (EditText) findViewById(R.id.signupUsername_textEdit);
         EditText password = (EditText) findViewById(R.id.signupPassword_textEdit);
@@ -94,6 +105,10 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Muestra un diálogo al usuario informándole del error que ha habido durante el registro
+     * @param signUpStatus String del estado del registro(error)
+     */
     private void signUpErrorDialog(String signUpStatus) {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Error.");

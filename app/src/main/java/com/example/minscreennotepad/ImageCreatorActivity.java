@@ -83,6 +83,9 @@ public class ImageCreatorActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Pregunta al usuario por permisos de camara
+     */
     private void askCameraPermissions() {
         if(ContextCompat.checkSelfPermission(ImageCreatorActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(ImageCreatorActivity.this, new String[] {Manifest.permission.CAMERA}, CAMERA_PERMISSION_CODE);
@@ -91,6 +94,9 @@ public class ImageCreatorActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Pregunta al usuario por permisos de galería
+     */
     private void askGalleryPermissions() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
@@ -132,11 +138,17 @@ public class ImageCreatorActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Abre la cámara del teléfono
+     */
     private void openCamera() {
         Intent camera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(camera, CAMERA_REQUEST_CODE);
     }
 
+    /**
+     * Abre la galería para seleccionar una imagen
+     */
     private void pickImageFromGallery() {
         //Intent para seleccionar la imagen
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -155,6 +167,9 @@ public class ImageCreatorActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Muestra un diálogo pidiendo confirmación al usuario de que quiere salir de la actividad
+     */
     public void showReturnDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Confirmación.");
@@ -177,6 +192,9 @@ public class ImageCreatorActivity extends AppCompatActivity {
         alert.create().show();
     }
 
+    /**
+     * Navega hacia la MainActivity
+     */
     public void goToMainActivity(){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
@@ -210,6 +228,9 @@ public class ImageCreatorActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Intenta añadir una nota de imagen nueva a la lista de notas del usuario
+     */
     public void saveImageNote(MenuItem item) {
         EditText noteTitle = (EditText) findViewById(R.id.imageTitle);
         if(!viewModel.isValidTitle(noteTitle.getText().toString())) {
@@ -228,6 +249,9 @@ public class ImageCreatorActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Muestra un diálogo avisando al usuario de que el título de la nota ya está en uso por otra
+     */
     public void sameTitleDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Error.");
@@ -242,6 +266,9 @@ public class ImageCreatorActivity extends AppCompatActivity {
         alert.create().show();
     }
 
+    /**
+     * Muestra un diálogo avisando al usuario de que el parámetro de título de la nota está vacío
+     */
     public void nullTitleDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Error.");
@@ -256,6 +283,9 @@ public class ImageCreatorActivity extends AppCompatActivity {
         alert.create().show();
     }
 
+    /**
+     * Muestra un diálogo avisando al usuario de que el parámetro de la imágen de la nota está vacío
+     */
     public void nullContentDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Error.");
@@ -270,7 +300,12 @@ public class ImageCreatorActivity extends AppCompatActivity {
         alert.create().show();
     }
 
-
+    /**
+     * Saca un objeto Uri de una imagen a partir de su Bitmap
+     * @param context   Contexto de la actividad
+     * @param bitmap    Bitmap de la imagen
+     * @return          Uri de la imagen
+     */
     private Uri getImageUriFromBitmap(Context context, Bitmap bitmap){
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);

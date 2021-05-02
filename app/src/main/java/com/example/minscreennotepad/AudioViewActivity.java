@@ -436,6 +436,9 @@ public class AudioViewActivity extends AppCompatActivity {
         alert.create().show();
     }
 
+    /**
+     * Muestra un diálogo al usuario indicandole que el parámetro de título está vacío
+     */
     public void nullTitleDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Error.");

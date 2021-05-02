@@ -12,7 +12,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class textCreatorActivity extends AppCompatActivity {
+public class TextCreatorActivity extends AppCompatActivity {
 
     private SharedViewModel viewModel;
 
@@ -90,7 +90,7 @@ public class textCreatorActivity extends AppCompatActivity {
         alert.setNegativeButton("Cancelar.", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(textCreatorActivity.this, "Operación cancelada.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(TextCreatorActivity.this, "Operación cancelada.", Toast.LENGTH_SHORT).show();
             }
         });
 

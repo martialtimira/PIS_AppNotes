@@ -50,6 +50,9 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Inicializa los componentes de la MainActivity
+     */
     public void init() {
         viewModel = SharedViewModel.getInstance();
         if(viewModel.getLoggedInUser() == null) {
@@ -61,6 +64,9 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
         noteRecyclerView.setAdapter(noteListAdapter);
     }
 
+    /**
+     * Metodo que sirve para verificar que siempre hay un usuario logueado.
+     */
     @Override
     protected void onResume() {
         if(viewModel.getLoggedInUser() == null) {
@@ -72,11 +78,18 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
         super.onResume();
     }
 
+    /**
+     * Cierra sesión del usuario actual
+     */
     private void logout() {
         viewModel.setLoggedInUser(null);
         goToLoginActivity();
     }
 
+    /**
+     * Al clickar el botón de "+", muestra un diálogo al usuario para elegir el tipo de nota a crear
+     * y lo redirecciona a la actividad pertinente.
+     */
     public void addNoteButtonClick(View view) {
         viewModel = SharedViewModel.getInstance();
         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
@@ -84,8 +97,6 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
         builder.setItems(new CharSequence[]
                         {"Texto.", "Audio.", "Imagen."},
                 (dialog, which) -> {
-                    // The 'which' argument contains the index position
-                    // of the selected item
                     switch (which) {
                         case 0:
                             goToTextCreatorActivity();
@@ -111,48 +122,67 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
 
     }
 
-    //Basic explicit intent to textCreatorActivity without extra data
+    /**
+     * Navega a ImageCreatorActivity
+     */
     private void goToImageCreatorActivity() {
         Intent intent = new Intent(this, ImageCreatorActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * Navega a LoginActivity
+     */
     private void goToLoginActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * Navega a ImageViewActivity
+     */
     private void goToImageViewActivity() {
         Intent intent = new Intent(this, ImageViewActivity.class);
         startActivity(intent);
     }
 
-    //Basic explicit intent to textCreatorActivity without extra data
+    /**
+     * Navega a TextCreatorActivity
+     */
     public void goToTextCreatorActivity(){
-        Intent intent = new Intent(this, textCreatorActivity.class);
+        Intent intent = new Intent(this, TextCreatorActivity.class);
         startActivity(intent);
     }
 
-    //Basic explicit intent to textViewActivity without extra data
+    /**
+     * Navega a TextViewActivity
+     */
     public void goToTextViewActivity(){
-        Intent intent = new Intent(this, textViewActivity.class);
+        Intent intent = new Intent(this, TextViewActivity.class);
         startActivity(intent);
     }
-    //Basic explicit intent to audioCreatorActivity without extra data
+
+    /**
+     * Navega a AudioCreatorActivity
+     */
     public void goToAudioCreatorActivity(){
         Intent intent = new Intent(this, AudioCreatorActivity.class);
         startActivity(intent);
     }
 
-    //Basic explicit intent to audioViewActivity without extra data
+    /**
+     * Navega a AudioViewActivity
+     */
     public void goToAudioViewActivity(){
         Intent intent = new Intent(this, AudioViewActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * Al clickar en la card de una nota, navega a la actividad correspondiente para visualizarla
+     */
     @Override
     public void onNoteClick(int position) {
-        //Note noteSelected = noteList.get(position);
         Note noteSelected = viewModel.getNoteByPosition(position);
         if(noteSelected instanceof NoteImage) {
             viewModel.setNoteToView(position);

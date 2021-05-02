@@ -21,6 +21,10 @@ public class LoginActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Inicio de sesión.");
     }
 
+    /**
+     * Al hacer click en el botón de login, intenta iniciar sesión a partir de los parámetros
+     * proporcionados
+     */
     public void loginButtonClick(View view) {
         EditText userNameText = (EditText) findViewById(R.id.loginUsername_TextEdit);
         EditText passwordText = (EditText) findViewById(R.id.loginPassword_textEdit);
@@ -33,21 +37,35 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Al hacer click en el botón de signup, navega hacia la actividad para registrar un usuario
+     * @param view
+     */
     public void signUpActivityButtonClick(View view) {
         goToSignupActivity();
     }
 
+    /**
+     * Navega a SignupActivity
+     */
     private void goToSignupActivity() {
         Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * Navega a MainActivity
+     */
     private void goToMainActivity(){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         this.finish();
     }
 
+    /**
+     * Muestra un diálogo al usuario con información acerca del estado del login
+     * @param loginStatus   String con el estado del login
+     */
     private void loginErrorDialog(String loginStatus) {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Error.");

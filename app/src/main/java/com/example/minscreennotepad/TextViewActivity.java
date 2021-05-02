@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.example.minscreennotepad.NoteClasses.NoteText;
 
-public class textViewActivity extends AppCompatActivity {
+public class TextViewActivity extends AppCompatActivity {
 
     private SharedViewModel viewModel;
 
@@ -105,7 +105,7 @@ public class textViewActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 viewModel.DeleteNoteToView();
-                Toast.makeText(textViewActivity.this, "Nota eliminada", Toast.LENGTH_SHORT).show();
+                Toast.makeText(TextViewActivity.this, "Nota eliminada", Toast.LENGTH_SHORT).show();
                 goToMainActivity();
             }
         });
@@ -113,7 +113,7 @@ public class textViewActivity extends AppCompatActivity {
         alert.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(textViewActivity.this, "Operación Cancelada", Toast.LENGTH_SHORT).show();
+                Toast.makeText(TextViewActivity.this, "Operación Cancelada", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -155,7 +155,7 @@ public class textViewActivity extends AppCompatActivity {
                     else{
                         note.setTitle(noteTitle.getText().toString());
                         note.setBody(noteText.getText().toString());
-                        Toast.makeText(textViewActivity.this, "Cambios guardados", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(TextViewActivity.this, "Cambios guardados", Toast.LENGTH_SHORT).show();
                         goToMainActivity();
                     }
                 }
@@ -164,7 +164,7 @@ public class textViewActivity extends AppCompatActivity {
             alert.setNegativeButton("No guardar", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Toast.makeText(textViewActivity.this, "Cambios no guardados", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(TextViewActivity.this, "Cambios no guardados", Toast.LENGTH_SHORT).show();
                     goToMainActivity();
                 }
             });
@@ -172,7 +172,7 @@ public class textViewActivity extends AppCompatActivity {
             alert.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Toast.makeText(textViewActivity.this, "Acción cancelada", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(TextViewActivity.this, "Acción cancelada", Toast.LENGTH_SHORT).show();
                 }
             });
 
