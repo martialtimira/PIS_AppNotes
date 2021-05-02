@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -87,11 +86,25 @@ public class SignUpActivity extends AppCompatActivity {
                 if (signupStatus.equals("Usuario registrado.")) {
                     this.finish();
                 } else {
-                    Toast.makeText(view.getContext(), signupStatus, Toast.LENGTH_SHORT).show();
+                    signUpErrorDialog(signupStatus);
                 }
             } else {
                 passwordsDontMatchDialog();
             }
         }
+    }
+
+    private void signUpErrorDialog(String signUpStatus) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Error.");
+        alert.setTitle(signUpStatus);
+
+        alert.setPositiveButton("Aceptar.", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        alert.create().show();
     }
 }

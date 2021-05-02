@@ -25,8 +25,6 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
 
     private NoteListAdapter noteListAdapter;
     private SharedViewModel viewModel;
-    private boolean userChanged;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +58,6 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
         if(viewModel.getLoggedInUser() == null) {
             goToLoginActivity();
         }
-        userChanged = false;
         noteListAdapter = new NoteListAdapter(viewModel.getNoteList(), this, this);
         RecyclerView noteRecyclerView = findViewById(R.id.noteRView);
         noteRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -72,8 +69,8 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
         if(viewModel.getLoggedInUser() == null) {
             goToLoginActivity();
         }
-        if(userChanged) {
-            noteListAdapter.setItems(viewModel.getNoteList());
+        else {
+            getSupportActionBar().setTitle("Notas de " + viewModel.getLoggedInUser().getUserName());
         }
         super.onResume();
     }
@@ -125,7 +122,6 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
 
     private void goToLoginActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
-        userChanged = true;
         startActivity(intent);
     }
 

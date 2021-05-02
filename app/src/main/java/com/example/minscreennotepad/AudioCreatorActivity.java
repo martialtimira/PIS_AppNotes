@@ -37,7 +37,6 @@ public class AudioCreatorActivity extends AppCompatActivity {
     private static final String LOG_TAG = "AudioRecordTest";
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private static String filePath = null;
-    //private EditText audioTitle;
     private long fileLenght;
 
     private MediaRecorder mRecorder = null;

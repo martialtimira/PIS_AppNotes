@@ -93,8 +93,8 @@ SharedViewModel "1" *-- "1" NoteListAdapter : té
 SharedViewModel "1" *--- "1" CarteraUsuari : té
 NoteListAdapter "1" *---- "0, ,100" Note : té
 
-SharedViewModel "1" -- "1" imageCreatorActivity
-SharedViewModel "1" -- "1" audioCreatorActivity
+SharedViewModel "1" -- "*" imageCreatorActivity
+SharedViewModel "1" -- "*" audioCreatorActivity
 SharedViewModel "1" -- "1" textCreatorActivity
 
 SharedViewModel "1" -- "1" imageViewActivity
@@ -103,6 +103,8 @@ SharedViewModel "1" -- "1" textViewActivity
 
 SharedViewModel "1" -- "1" LoginActivity
 SharedViewModel "1" -- "1" SignUpActivity
+
+audioCreatorActivity "*" -- "1" MainActivity : navega
 
 
 @enduml
