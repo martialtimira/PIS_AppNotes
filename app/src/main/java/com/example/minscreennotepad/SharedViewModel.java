@@ -74,7 +74,7 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel {
     }
 
     public String loginUser(String userName, String password) {
-        String returnStatement = "Login Correcte";
+        String returnStatement = "Inicio de sesión correcto.";
         Usuari user = carteraUsuaris.find(userName);
         if(user != null) {
             if (user.getPassword().equals(password)){
@@ -82,21 +82,21 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel {
                 noteList = user.getNoteList();
             }
             else {
-                returnStatement = "Usuari/contrasenya incorrectes";
+                returnStatement = "Usuario/contraseña incorrectos.";
             }
         }
         else {
-            returnStatement = "Usuari no existeix";
+            returnStatement = "Usuario no existe.";
         }
         return returnStatement;
     }
 
     public String signUpUser(String userName, String passwrod) {
         if(carteraUsuaris.signUpUser(new Usuari(userName, passwrod))) {
-            return "Usuari registrat";
+            return "Usuario registrado.";
         }
         else{
-            return "Nom d'usuari ja existeix";
+            return "El nombre de usuario ya existe.";
         }
     }
     

@@ -16,14 +16,14 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         viewModel = SharedViewModel.getInstance();
-        getSupportActionBar().setTitle("Login");
+        getSupportActionBar().setTitle("Inicio de sesión.");
     }
 
     public void loginButtonClick(View view) {
         EditText userNameText = (EditText) findViewById(R.id.loginUsername_TextEdit);
         EditText passwordText = (EditText) findViewById(R.id.loginPassword_textEdit);
         String loginStatus = viewModel.loginUser(userNameText.getText().toString(), passwordText.getText().toString());
-        if(loginStatus.equals("Login Correcte")){
+        if(loginStatus.equals("Inicio de sesión correcto.")){
             goToMainActivity();
         }
         else {

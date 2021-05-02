@@ -52,7 +52,7 @@ public class imageCreatorActivity extends AppCompatActivity {
 
         viewModel = SharedViewModel.getInstance();
 
-        getSupportActionBar().setTitle("Crear nota de imagen");
+        getSupportActionBar().setTitle("Crear nota de imagen.");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -117,7 +117,7 @@ public class imageCreatorActivity extends AppCompatActivity {
                     pickImageFromGallery();
                 }
                 else {
-                    Toast.makeText(this, "Permiso denegado", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Permiso denegado.", Toast.LENGTH_SHORT).show();
                 }
             }
             case CAMERA_PERMISSION_CODE: {
@@ -126,7 +126,7 @@ public class imageCreatorActivity extends AppCompatActivity {
                     openCamera();
                 }
                 else {
-                    Toast.makeText(this, "Permiso denegado", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Permiso denegado.", Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -157,20 +157,20 @@ public class imageCreatorActivity extends AppCompatActivity {
 
     public void showReturnDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("Confirmación");
+        alert.setTitle("Confirmación.");
         alert.setTitle("¿Seguro que quieres salir?");
 
-        alert.setPositiveButton("Salir", new DialogInterface.OnClickListener() {
+        alert.setPositiveButton("Salir.", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 goToMainActivity();
             }
         });
 
-        alert.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+        alert.setNegativeButton("Cancelar.", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(imageCreatorActivity.this, "Operación Cancelada", Toast.LENGTH_SHORT).show();
+                Toast.makeText(imageCreatorActivity.this, "Operación cancelada.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -223,17 +223,17 @@ public class imageCreatorActivity extends AppCompatActivity {
         }
         else {
             viewModel.addImageNote(noteTitle.getText().toString(), imageUri);
-            Toast.makeText(this, "Nota guardada", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Nota guardada.", Toast.LENGTH_SHORT).show();
             goToMainActivity();
         }
     }
 
     public void sameTitleDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("Error");
+        alert.setTitle("Error.");
         alert.setTitle("El título ya está en uso.");
 
-        alert.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+        alert.setPositiveButton("Aceptar.", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
@@ -244,10 +244,10 @@ public class imageCreatorActivity extends AppCompatActivity {
 
     public void nullTitleDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("Error");
+        alert.setTitle("Error.");
         alert.setTitle("El título está vacío.");
 
-        alert.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+        alert.setPositiveButton("Aceptar.", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
@@ -258,10 +258,10 @@ public class imageCreatorActivity extends AppCompatActivity {
 
     public void nullContentDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("Error");
+        alert.setTitle("Error.");
         alert.setTitle("Selecciona una imagen.");
 
-        alert.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+        alert.setPositiveButton("Aceptar.", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 

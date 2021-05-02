@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
         builder.setTitle("¿Qué tipo de nota quieres crear?");
         builder.setItems(new CharSequence[]
-                        {"Texto", "Audio", "Imagen", "Cancelar"},
+                        {"Texto.", "Audio.", "Imagen.", "Cancelar."},
                 (dialog, which) -> {
                     // The 'which' argument contains the index position
                     // of the selected item
