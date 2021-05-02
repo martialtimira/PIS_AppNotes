@@ -2,18 +2,24 @@ package com.example.minscreennotepad.NoteClasses;
 
 public class NoteAudio extends Note {
 
-    String fileName;
+    long fileLenght; // Duracio en segons
+    String filePath; //file path
 
-    public NoteAudio(String title, String fileName) {
+    public NoteAudio(String title, String filePath, long fileLenght) {
         super(title);
-        this.fileName = fileName;
+        this.filePath = filePath;
+        this.fileLenght = fileLenght;
     }
 
-    public String getFileName() {
-        return fileName;
+    public String getFilePath() {
+        return filePath;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
+
+    public long getFileLenght(){return fileLenght;}
+
+    public void setFileLenght(long fileLenght ){this.fileLenght = fileLenght;}
 }
