@@ -33,7 +33,6 @@ public class ImageCreatorActivity extends AppCompatActivity {
     private ImageView selectedImage;
     private ImageButton camera_button;
     private ImageButton gallery_button;
-    private String currentPhotoPath;
     private Uri imageUri;
 
     private SharedViewModel viewModel;
