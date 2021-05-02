@@ -6,18 +6,35 @@ public class Note {
 
     String title;
 
+    /**
+     * constructor de note
+     * @param title Título de la nota
+     */
     public Note(String title) {
         this.title = title;
     }
 
+    /**
+     * Getter del título
+     * @return  String con el título
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Setter del título
+     * @param title String del nuevo título
+     */
     public void setTitle(String title) {
         this.title = title;
     }
 
+    /**
+     * Metodo equals para comparar 2 objetos Note
+     * @param o Objeto a comparar
+     * @return  true si son iguales, false si no lo són
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
