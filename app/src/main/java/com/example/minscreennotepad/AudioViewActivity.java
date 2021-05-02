@@ -24,7 +24,7 @@ import com.example.minscreennotepad.NoteClasses.NoteAudio;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-public class audioViewActivity extends AppCompatActivity {
+public class AudioViewActivity extends AppCompatActivity {
     private static final String LOG_TAG = "AudioPlayTest";
     private SharedViewModel viewModel;
     private MediaPlayer mMediaPlayer = null;
@@ -105,8 +105,7 @@ public class audioViewActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                //goToMainActivity();
-                showReturnDialog();
+                showBackDialog();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -128,11 +127,62 @@ public class audioViewActivity extends AppCompatActivity {
         alert.setNegativeButton("Cancelar.", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(audioViewActivity.this, "Operación Cancelada.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AudioViewActivity.this, "Operación Cancelada.", Toast.LENGTH_SHORT).show();
             }
         });
 
         alert.create().show();
+    }
+
+    private void showBackDialog() {
+        EditText noteTitle = (EditText) findViewById(R.id.audio_title);
+        NoteAudio note = (NoteAudio) viewModel.getNoteToView();
+
+        if(!noteTitle.getText().toString().equals(note.getTitle())) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("Confirmación");
+            alert.setTitle("¿Quieres guardar los cambios?");
+
+            alert.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if(!viewModel.isValidTitle(noteTitle.getText().toString()) &&
+                            !noteTitle.getText().toString().equals(note.getTitle())) {
+                        //cambiar a dialog
+                        sameTitleDialog();
+                    }
+                    else if (noteTitle.getText().toString().isEmpty()) {
+                        //cambiar a dialog
+                        nullTitleDialog();
+                    }
+                    else{
+                        note.setTitle(noteTitle.getText().toString());
+                        Toast.makeText(AudioViewActivity.this, "Cambios guardados", Toast.LENGTH_SHORT).show();
+                        goToMainActivity();
+                    }
+                }
+            });
+
+            alert.setNegativeButton("No guardar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Toast.makeText(AudioViewActivity.this, "Cambios no guardados", Toast.LENGTH_SHORT).show();
+                    goToMainActivity();
+                }
+            });
+
+            alert.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                }
+            });
+
+            alert.create().show();
+        }
+        //Si no hay cambios, volvemos directamente a MainActivity
+        else{
+            goToMainActivity();
+        }
     }
 
     //Basic explicit intent to MainActivity without extra data
@@ -198,7 +248,7 @@ public class audioViewActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 viewModel.DeleteNoteToView();
-                Toast.makeText(audioViewActivity.this, "Nota eliminada.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AudioViewActivity.this, "Nota eliminada.", Toast.LENGTH_SHORT).show();
                 goToMainActivity();
             }
         });
@@ -206,7 +256,7 @@ public class audioViewActivity extends AppCompatActivity {
         alert.setNegativeButton("Cancelar.", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(audioViewActivity.this, "Operación cancelada.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AudioViewActivity.this, "Operación cancelada.", Toast.LENGTH_SHORT).show();
             }
         });
 

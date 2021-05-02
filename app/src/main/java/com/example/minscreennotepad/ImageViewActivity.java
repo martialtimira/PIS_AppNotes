@@ -5,8 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,11 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.minscreennotepad.NoteClasses.NoteImage;
-import com.example.minscreennotepad.NoteClasses.NoteText;
 
-import java.io.ByteArrayOutputStream;
-
-public class imageViewActivity extends AppCompatActivity {
+public class ImageViewActivity extends AppCompatActivity {
     
     private SharedViewModel viewModel;
     
@@ -67,7 +62,7 @@ public class imageViewActivity extends AppCompatActivity {
         alert.setNegativeButton("Cancelar.", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(imageViewActivity.this, "Operación cancelada.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ImageViewActivity.this, "Operación cancelada.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -128,7 +123,7 @@ public class imageViewActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 viewModel.DeleteNoteToView();
-                Toast.makeText(imageViewActivity.this, "Nota eliminada.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ImageViewActivity.this, "Nota eliminada.", Toast.LENGTH_SHORT).show();
                 goToMainActivity();
             }
         });
@@ -136,7 +131,7 @@ public class imageViewActivity extends AppCompatActivity {
         alert.setNegativeButton("Cancelar.", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(imageViewActivity.this, "Operación cancelada.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ImageViewActivity.this, "Operación cancelada.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -200,7 +195,7 @@ public class imageViewActivity extends AppCompatActivity {
                     }
                     else{
                         note.setTitle(noteTitle.getText().toString());
-                        Toast.makeText(imageViewActivity.this, "Cambios guardados", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ImageViewActivity.this, "Cambios guardados", Toast.LENGTH_SHORT).show();
                         goToMainActivity();
                     }
                 }
@@ -209,7 +204,7 @@ public class imageViewActivity extends AppCompatActivity {
             alert.setNegativeButton("No guardar", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Toast.makeText(imageViewActivity.this, "Cambios no guardados", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ImageViewActivity.this, "Cambios no guardados", Toast.LENGTH_SHORT).show();
                     goToMainActivity();
                 }
             });
@@ -226,8 +221,6 @@ public class imageViewActivity extends AppCompatActivity {
         else{
             goToMainActivity();
         }
-
-
     }
 
 

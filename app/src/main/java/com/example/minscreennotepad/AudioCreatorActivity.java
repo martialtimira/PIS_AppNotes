@@ -32,7 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class audioCreatorActivity extends AppCompatActivity {
+public class AudioCreatorActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = "AudioRecordTest";
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
@@ -98,7 +98,7 @@ public class audioCreatorActivity extends AppCompatActivity {
         alert.setNegativeButton("Cancelar.", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(audioCreatorActivity.this, "Operación Cancelada.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AudioCreatorActivity.this, "Operación Cancelada.", Toast.LENGTH_SHORT).show();
             }
         });
 

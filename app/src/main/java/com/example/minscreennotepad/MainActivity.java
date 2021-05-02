@@ -20,9 +20,6 @@ import com.example.minscreennotepad.NoteClasses.NoteAudio;
 import com.example.minscreennotepad.NoteClasses.NoteImage;
 import com.example.minscreennotepad.NoteClasses.NoteText;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MainActivity extends AppCompatActivity implements NoteListAdapter.OnNoteListener {
 
 
@@ -122,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
 
     //Basic explicit intent to textCreatorActivity without extra data
     private void goToImageCreatorActivity() {
-        Intent intent = new Intent(this, imageCreatorActivity.class);
+        Intent intent = new Intent(this, ImageCreatorActivity.class);
         startActivity(intent);
     }
 
@@ -133,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
     }
 
     private void goToImageViewActivity() {
-        Intent intent = new Intent(this, imageViewActivity.class);
+        Intent intent = new Intent(this, ImageViewActivity.class);
         startActivity(intent);
     }
 
@@ -150,13 +147,13 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
     }
     //Basic explicit intent to audioCreatorActivity without extra data
     public void goToAudioCreatorActivity(){
-        Intent intent = new Intent(this, audioCreatorActivity.class);
+        Intent intent = new Intent(this, AudioCreatorActivity.class);
         startActivity(intent);
     }
 
     //Basic explicit intent to audioViewActivity without extra data
     public void goToAudioViewActivity(){
-        Intent intent = new Intent(this, audioViewActivity.class);
+        Intent intent = new Intent(this, AudioViewActivity.class);
         startActivity(intent);
     }
 

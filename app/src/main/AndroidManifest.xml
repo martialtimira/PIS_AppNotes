@@ -14,10 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MinScreenNotepad">
-        <activity android:name=".audioViewActivity"/>
-        <activity android:name=".audioCreatorActivity" />
-        <activity android:name=".imageViewActivity" />
-        <activity android:name=".imageCreatorActivity" />
+        <activity android:name=".AudioViewActivity"/>
+        <activity android:name=".AudioCreatorActivity" />
+        <activity android:name=".ImageViewActivity" />
+        <activity android:name=".ImageCreatorActivity" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".textViewActivity" />

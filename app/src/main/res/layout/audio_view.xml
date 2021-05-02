@@ -10,7 +10,7 @@
     <EditText
         android:id="@+id/audio_title"
         android:layout_width="match_parent"
-        android:layout_height="79dp"
+        android:layout_height="88dp"
         android:autofillHints="title"
         android:ems="10"
         android:inputType="textPersonName"

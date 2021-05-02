@@ -5,12 +5,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ContentProvider;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,28 +16,19 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.minscreennotepad.NoteClasses.NoteText;
-
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
-public class imageCreatorActivity extends AppCompatActivity {
+public class ImageCreatorActivity extends AppCompatActivity {
 
     private ImageView selectedImage;
     private ImageButton camera_button;
@@ -96,8 +84,8 @@ public class imageCreatorActivity extends AppCompatActivity {
     }
 
     private void askCameraPermissions() {
-        if(ContextCompat.checkSelfPermission(imageCreatorActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(imageCreatorActivity.this, new String[] {Manifest.permission.CAMERA}, CAMERA_PERMISSION_CODE);
+        if(ContextCompat.checkSelfPermission(ImageCreatorActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(ImageCreatorActivity.this, new String[] {Manifest.permission.CAMERA}, CAMERA_PERMISSION_CODE);
         } else { // Permiso dado
             openCamera();
         }
@@ -182,7 +170,7 @@ public class imageCreatorActivity extends AppCompatActivity {
         alert.setNegativeButton("Cancelar.", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(imageCreatorActivity.this, "Operación cancelada.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ImageCreatorActivity.this, "Operación cancelada.", Toast.LENGTH_SHORT).show();
             }
         });
 
