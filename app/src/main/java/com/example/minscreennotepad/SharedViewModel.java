@@ -172,6 +172,10 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
         noteText.saveNote();
     }
 
+    public void addImageNoteToFireBase(NoteImage noteImage) {
+        noteImage.saveImageNote();
+    }
+
     /**
      * Añade una nota de texto a la noteList a partir de su título y texto
      * @param title String del título de la nota
@@ -210,7 +214,7 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
         NoteImage imageNote = new NoteImage(title, image);
         //Añadimos la nota de imagen a la lista
         noteList.add(imageNote);
-
+        addImageNoteToFireBase(imageNote);
     }
 
     /**

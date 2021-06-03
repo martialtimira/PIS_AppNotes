@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 import com.example.minscreennotepad.NoteClasses.Note;
+import com.example.minscreennotepad.NoteClasses.NoteAudio;
+import com.example.minscreennotepad.NoteClasses.NoteImage;
 import com.example.minscreennotepad.NoteClasses.NoteText;
 import com.google.android.gms.common.util.ScopeUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -138,7 +140,14 @@ public class DatabaseAdapter{
                             ArrayList<Note> retrieved_noteList = new ArrayList<Note>() ;
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
-                                retrieved_noteList.add(new NoteText( document.getString("title"), document.getString("body")));
+                                if (document.get("id").equals("0") ) {
+                                    Log.d(TAG, "entro en id 0");
+                                    retrieved_noteList.add(new NoteText(document.getString("title"), document.getString("body")));
+                                } else if (document.get("id").equals("1") ) {
+                                    retrieved_noteList.add(new NoteImage(document.getString("title"), Uri.parse((String) document.get("body"))));
+                                } else if (document.get("id").equals("2")) {
+                                    //retrieved_noteList.add(new NoteAudio(document.getString("title"), document.getString("body")));
+                                }
                             }
                             listener.setCollection(retrieved_noteList);
                         } else {
@@ -149,11 +158,12 @@ public class DatabaseAdapter{
     }
 
 
-    public void saveNoteText (String title, String body) {
+    public void saveNoteText (String title, String body, String id) {
         // Create a new user with a first and last name
         Map<String, Object> note = new HashMap<>();
         note.put("title", title);
         note.put("body", body);
+        note.put("id", id);
         // Add a new document with a generated ID
         db.collection(user.getEmail())
                 .add(note)
@@ -171,13 +181,34 @@ public class DatabaseAdapter{
                 });
     }
 
-    /*
-    public void saveDocumentWithFile (String id, String description, String userid, String path) {
+    public void saveNoteImage(String title, String body, String id) {
+        Map<String, Object> note = new HashMap<>();
+        note.put("title", title);
+        note.put("body", body);
+        note.put("id", id);
+        // Add a new document with a generated ID
+        db.collection(user.getEmail())
+                .add(note)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error adding document", e);
+                    }
+                });
+    }
 
-        Uri file = Uri.fromFile(new File(path));
+/*
+    public void saveDocumentWithFile (String description, Uri file) {
+
         StorageReference storageRef = storage.getReference();
-        StorageReference audioRef = storageRef.child("audio"+File.separator+file.getLastPathSegment());
-        UploadTask uploadTask = audioRef.putFile(file);
+        StorageReference imageRef = storageRef.child("image"+file.getLastPathSegment());
+        UploadTask uploadTask = imageRef.putFile(file);
 
         Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
@@ -187,14 +218,14 @@ public class DatabaseAdapter{
                 }
 
                 // Continue with the task to get the download URL
-                return audioRef.getDownloadUrl();
+                return imageRef.getDownloadUrl();
             }
         }).addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
             public void onComplete(@NonNull Task<Uri> task) {
                 if (task.isSuccessful()) {
                     Uri downloadUri = task.getResult();
-                    saveDocument(id, description, userid, downloadUri.toString());
+                    saveNoteImage(description, downloadUri.toString());
                 } else {
                     // Handle failures
                     // ...
@@ -211,8 +242,9 @@ public class DatabaseAdapter{
             }
         });
     }
-    */
+*/
 
+    /*
     public HashMap<String, String> getDocuments () {
         db.collection("audioCards")
                 .get()
@@ -231,7 +263,7 @@ public class DatabaseAdapter{
 
         return new HashMap<>();
     }
-
+    */
 }
 
 

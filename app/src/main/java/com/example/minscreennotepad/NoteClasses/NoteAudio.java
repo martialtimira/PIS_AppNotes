@@ -15,6 +15,7 @@ public class NoteAudio extends Note {
         super(title);
         this.filePath = filePath;
         this.fileLenght = fileLenght;
+        id = "2";
     }
 
     /**

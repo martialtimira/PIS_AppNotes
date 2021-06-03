@@ -9,6 +9,7 @@ public class NoteText extends Note {
     String body;
     private final DatabaseAdapter adapter = DatabaseAdapter.databaseAdapter;
 
+
     /**
      * Constructor de NoteText
      * @param title String con el titulo de la Note
@@ -17,6 +18,7 @@ public class NoteText extends Note {
     public NoteText(String title, String body) {
         super(title);
         this.body = body;
+        id = "0";
     }
 
     /**
@@ -37,7 +39,7 @@ public class NoteText extends Note {
 
     public void saveNote() {
         Log.d("saveCard", "saveCard-> saveDocument");
-        adapter.saveNoteText(this.title, this.body);
+        adapter.saveNoteText(this.title, this.body, this.id);
     }
 
 }

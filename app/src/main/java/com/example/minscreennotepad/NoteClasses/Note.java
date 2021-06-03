@@ -5,6 +5,7 @@ import java.util.Objects;
 public class Note {
 
     String title;
+    String id;
 
     /**
      * constructor de note
