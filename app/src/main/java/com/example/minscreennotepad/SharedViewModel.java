@@ -21,7 +21,7 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
     private volatile static SharedViewModel uniqueInstance;
 
     private User loggedInUser;
-    private MutableLiveData<ArrayList<Note>> noteList;
+    private List<Note> noteList;
     private CarteraUsuaris carteraUsuaris;
     private Note noteToView;
     private final MutableLiveData<String> mToast;
@@ -33,8 +33,8 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
      * Constructor de SharedViewModel
      */
     private SharedViewModel(){
-        noteList = new MutableLiveData<>();
-        noteList.setValue(new ArrayList<Note>());
+        noteList = new ArrayList<Note>();
+
         carteraUsuaris = new CarteraUsuaris();
         mToast = new MutableLiveData<>();
         da = new DatabaseAdapter(this);
@@ -77,7 +77,7 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
      * @return Nota encontrada
      */
     public Note getNoteByPosition(int pos){
-        return noteList.getValue().get(pos);
+        return noteList.get(pos);
     }
 
     /**
@@ -85,14 +85,14 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
      * @return Lista de notas
      */
     public List<Note> getNoteList(){
-        return noteList.getValue();
+        return noteList;
     }
 
     /**
      * Getter de noteList
      * @return Lista de notas
      */
-    public MutableLiveData<ArrayList<Note>> getNoteListLiveData(){
+    public List<Note> getNoteListLiveData(){
         return noteList;
     }
 
@@ -101,7 +101,7 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
      * @param noteList nueve lista de notas
      */
     public void setNoteList(ArrayList<Note> noteList) {
-        this.noteList.setValue(noteList);
+        this.noteList = noteList;
     }
 
     /**
@@ -109,7 +109,7 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
      * @param notePosition int de la posición de la nota
      */
     public void setNoteToView(int notePosition) {
-        this.noteToView=noteList.getValue().get(notePosition);
+        this.noteToView=noteList.get(notePosition);
     }
 
     /**
@@ -132,7 +132,7 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
         if(user != null) {
             if (user.getPassword().equals(password)){
                 loggedInUser = user;
-                noteList.setValue(user.getNoteList());
+                noteList = user.getNoteList();
                 da.signIn(userName,password);
             }
             else {
@@ -165,7 +165,7 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
      * Elimina la noteToView de la lista de notas
      */
     public void DeleteNoteToView() {
-        this.noteList.getValue().remove(noteToView);
+        this.noteList.remove(noteToView);
     }
 
     public void addTextoNoteToFireBase(NoteText noteText){
@@ -181,7 +181,7 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
         // Creamos nota de texto a partir de los datos pasados como parametros
         NoteText textNote = new NoteText(title, text);
         // Añadimos nota de texto a la lista
-        noteList.getValue().add(textNote);
+        noteList.add(textNote);
         addTextoNoteToFireBase(textNote);
     }
 
@@ -192,7 +192,7 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
      */
     public boolean isValidTitle(String title) {
         boolean isValid = true;
-        for (Note n: noteList.getValue()) {
+        for (Note n: noteList) {
             if(n.getTitle().equals(title)){
                 isValid = false;
             }
@@ -209,7 +209,7 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
         //Creamos nota de imagen a partir de los datos pasados como parametros
         NoteImage imageNote = new NoteImage(title, image);
         //Añadimos la nota de imagen a la lista
-        noteList.getValue().add(imageNote);
+        noteList.add(imageNote);
 
     }
 
@@ -223,7 +223,7 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
         // Creamos nota de audio a partir de los datos pasados como parametros
         NoteAudio audioNote = new NoteAudio(title, filePath, fileLength);
         // Añadimos nota de audio a la lista
-        noteList.getValue().add(audioNote);
+        noteList.add(audioNote);
     }
 
     public LiveData<String> getToast(){
@@ -234,7 +234,7 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
     @Override
     public void setCollection(ArrayList<Note> noteList) {
         for (Note note : noteList) {
-            this.noteList.getValue().add(note);
+            this.noteList.add(note);
         }
         //this.noteList.setValue(noteList);
         noteListAdapter.notifyDataSetChanged();

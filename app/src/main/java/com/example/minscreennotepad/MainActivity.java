@@ -72,8 +72,6 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
         noteRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         noteRecyclerView.setAdapter(noteListAdapter);
         viewModel.setNoteListAdapter(noteListAdapter);
-
-        noteListAdapter.notifyDataSetChanged();
     }
 
     /**
