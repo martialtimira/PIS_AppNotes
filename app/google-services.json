@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "379924615714",
+    "project_id": "pis-appnotes",
+    "storage_bucket": "pis-appnotes.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:379924615714:android:029813e645d3a65685f07b",
+        "android_client_info": {
+          "package_name": "com.example.minscreennotepad"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "379924615714-qr5ne6hql635285i6oao7oal1upqs13r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1gkvEgT-0ogyCpNqB2rtNPdiox2dlwOk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "379924615714-qr5ne6hql635285i6oao7oal1upqs13r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

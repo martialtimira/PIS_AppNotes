@@ -3,9 +3,12 @@ package com.example.minscreennotepad;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,11 +23,15 @@ import com.example.minscreennotepad.NoteClasses.NoteAudio;
 import com.example.minscreennotepad.NoteClasses.NoteImage;
 import com.example.minscreennotepad.NoteClasses.NoteText;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity implements NoteListAdapter.OnNoteListener {
 
-
+    private Context parentContext;
+    private AppCompatActivity mActivity;
     private NoteListAdapter noteListAdapter;
     private SharedViewModel viewModel;
+    private RecyclerView noteRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,10 +65,15 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
         if(viewModel.getLoggedInUser() == null) {
             goToLoginActivity();
         }
+        parentContext = this.getBaseContext();
+        mActivity = this;
         noteListAdapter = new NoteListAdapter(viewModel.getNoteList(), this, this);
-        RecyclerView noteRecyclerView = findViewById(R.id.noteRView);
+        noteRecyclerView = findViewById(R.id.noteRView);
         noteRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         noteRecyclerView.setAdapter(noteListAdapter);
+        viewModel.setNoteListAdapter(noteListAdapter);
+
+        noteListAdapter.notifyDataSetChanged();
     }
 
     /**

@@ -1,8 +1,13 @@
 package com.example.minscreennotepad.NoteClasses;
 
+import android.util.Log;
+
+import com.example.minscreennotepad.DatabaseAdapter;
+
 public class NoteText extends Note {
 
     String body;
+    private final DatabaseAdapter adapter = DatabaseAdapter.databaseAdapter;
 
     /**
      * Constructor de NoteText
@@ -29,4 +34,10 @@ public class NoteText extends Note {
     public void setBody(String body) {
         this.body = body;
     }
+
+    public void saveNote() {
+        Log.d("saveCard", "saveCard-> saveDocument");
+        adapter.saveNoteText(this.title, this.body);
+    }
+
 }

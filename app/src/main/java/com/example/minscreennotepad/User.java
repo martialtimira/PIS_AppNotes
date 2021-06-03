@@ -8,7 +8,7 @@ import java.util.List;
 public class User {
 
     private String userName, password;
-    private List<Note> noteList;
+    private ArrayList<Note> noteList;
 
     /**
      * Constructor de User
@@ -57,7 +57,7 @@ public class User {
      * Getter de la lista de notas del usuario
      * @return Lista de notas
      */
-    public List<Note> getNoteList() {
+    public ArrayList<Note> getNoteList() {
         return noteList;
     }
 
@@ -65,7 +65,7 @@ public class User {
      * Setter de la lista de notas del usuario
      * @param noteList Nueva lista de notas
      */
-    public void setNoteList(List<Note> noteList) {
+    public void setNoteList(ArrayList<Note> noteList) {
         this.noteList = noteList;
     }
 }

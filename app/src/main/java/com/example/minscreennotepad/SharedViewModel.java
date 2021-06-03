@@ -1,34 +1,43 @@
 package com.example.minscreennotepad;
 
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.minscreennotepad.NoteClasses.Note;
 import com.example.minscreennotepad.NoteClasses.NoteAudio;
 import com.example.minscreennotepad.NoteClasses.NoteImage;
 import com.example.minscreennotepad.NoteClasses.NoteText;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SharedViewModel extends androidx.lifecycle.ViewModel {
+public class SharedViewModel extends androidx.lifecycle.ViewModel implements DatabaseAdapter.vmInterface {
 
     private volatile static SharedViewModel uniqueInstance;
 
     private User loggedInUser;
-    public List<Note> noteList;
+    private MutableLiveData<ArrayList<Note>> noteList;
     private CarteraUsuaris carteraUsuaris;
     private Note noteToView;
+    private final MutableLiveData<String> mToast;
     public static final String TAG = "ViewModel";
+    private NoteListAdapter noteListAdapter;
+    private DatabaseAdapter da;
 
     /**
      * Constructor de SharedViewModel
      */
     private SharedViewModel(){
-        noteList = new ArrayList<>();
+        noteList = new MutableLiveData<>();
+        noteList.setValue(new ArrayList<Note>());
         carteraUsuaris = new CarteraUsuaris();
+        mToast = new MutableLiveData<>();
+        da = new DatabaseAdapter(this);
     }
 
     public static SharedViewModel getInstance() {
@@ -40,6 +49,10 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel {
             }
         }
         return uniqueInstance;
+    }
+
+    public void setNoteListAdapter(NoteListAdapter noteListAdapter){
+        this.noteListAdapter = noteListAdapter;
     }
 
     /**
@@ -64,7 +77,7 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel {
      * @return Nota encontrada
      */
     public Note getNoteByPosition(int pos){
-        return noteList.get(pos);
+        return noteList.getValue().get(pos);
     }
 
     /**
@@ -72,6 +85,14 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel {
      * @return Lista de notas
      */
     public List<Note> getNoteList(){
+        return noteList.getValue();
+    }
+
+    /**
+     * Getter de noteList
+     * @return Lista de notas
+     */
+    public MutableLiveData<ArrayList<Note>> getNoteListLiveData(){
         return noteList;
     }
 
@@ -79,8 +100,8 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel {
      * Setter de noteList
      * @param noteList nueve lista de notas
      */
-    public void setNoteList(List<Note> noteList) {
-        this.noteList=noteList;
+    public void setNoteList(ArrayList<Note> noteList) {
+        this.noteList.setValue(noteList);
     }
 
     /**
@@ -88,7 +109,7 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel {
      * @param notePosition int de la posición de la nota
      */
     public void setNoteToView(int notePosition) {
-        this.noteToView=noteList.get(notePosition);
+        this.noteToView=noteList.getValue().get(notePosition);
     }
 
     /**
@@ -111,7 +132,8 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel {
         if(user != null) {
             if (user.getPassword().equals(password)){
                 loggedInUser = user;
-                noteList = user.getNoteList();
+                noteList.setValue(user.getNoteList());
+                da.signIn(userName,password);
             }
             else {
                 returnStatement = "Usuario/contraseña incorrectos.";
@@ -126,11 +148,12 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel {
     /**
      * Intenta registrar un nuevo usuario a partir de un nombre y contraseña
      * @param userName String del nombre del usuario
-     * @param passwrod String de la contraseña del usuario
+     * @param password String de la contraseña del usuario
      * @return String del estado del registro
      */
-    public String signUpUser(String userName, String passwrod) {
-        if(carteraUsuaris.signUpUser(new User(userName, passwrod))) {
+    public String signUpUser(String userName, String password) {
+        if(carteraUsuaris.signUpUser(new User(userName, password))) {
+            da.createAccount(userName, password);
             return "Usuario registrado.";
         }
         else{
@@ -142,7 +165,11 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel {
      * Elimina la noteToView de la lista de notas
      */
     public void DeleteNoteToView() {
-        this.noteList.remove(noteToView);
+        this.noteList.getValue().remove(noteToView);
+    }
+
+    public void addTextoNoteToFireBase(NoteText noteText){
+        noteText.saveNote();
     }
 
     /**
@@ -154,7 +181,8 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel {
         // Creamos nota de texto a partir de los datos pasados como parametros
         NoteText textNote = new NoteText(title, text);
         // Añadimos nota de texto a la lista
-        noteList.add(textNote);
+        noteList.getValue().add(textNote);
+        addTextoNoteToFireBase(textNote);
     }
 
     /**
@@ -164,7 +192,7 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel {
      */
     public boolean isValidTitle(String title) {
         boolean isValid = true;
-        for (Note n: noteList) {
+        for (Note n: noteList.getValue()) {
             if(n.getTitle().equals(title)){
                 isValid = false;
             }
@@ -181,7 +209,7 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel {
         //Creamos nota de imagen a partir de los datos pasados como parametros
         NoteImage imageNote = new NoteImage(title, image);
         //Añadimos la nota de imagen a la lista
-        noteList.add(imageNote);
+        noteList.getValue().add(imageNote);
 
     }
 
@@ -195,6 +223,25 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel {
         // Creamos nota de audio a partir de los datos pasados como parametros
         NoteAudio audioNote = new NoteAudio(title, filePath, fileLength);
         // Añadimos nota de audio a la lista
-        noteList.add(audioNote);
+        noteList.getValue().add(audioNote);
     }
+
+    public LiveData<String> getToast(){
+        return mToast;
+    }
+
+    //communicates user inputs and updates the result in the viewModel
+    @Override
+    public void setCollection(ArrayList<Note> noteList) {
+        for (Note note : noteList) {
+            this.noteList.getValue().add(note);
+        }
+        //this.noteList.setValue(noteList);
+        noteListAdapter.notifyDataSetChanged();
+    }
+
+    public void setToast(String t) {
+        mToast.setValue(t);
+    }
+
 }
