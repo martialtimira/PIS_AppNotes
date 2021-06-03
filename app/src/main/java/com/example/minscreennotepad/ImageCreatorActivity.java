@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,6 +26,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import java.util.HashMap;
 
 import java.io.ByteArrayOutputStream;
 
@@ -44,6 +52,8 @@ public class ImageCreatorActivity extends AppCompatActivity {
     private static final int CAMERA_PERMISSION_CODE = 2000;
     private static final int CAMERA_REQUEST_CODE = 2001;
 
+    DatabaseReference myRef;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +66,11 @@ public class ImageCreatorActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         selectedImage = findViewById(R.id.imageContent);
+
+        /* Firebase */
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        myRef = database.getReference("user1");
+        /*----------*/
         /*
          * Métodos para acceder a la cámara.
          */
@@ -244,6 +259,23 @@ public class ImageCreatorActivity extends AppCompatActivity {
         else {
             viewModel.addImageNote(noteTitle.getText().toString(), imageUri);
             Toast.makeText(this, "Nota guardada.", Toast.LENGTH_SHORT).show();
+
+            /*Firebase*/
+            StorageReference Folder = FirebaseStorage.getInstance().getReference().child("User");
+
+            final StorageReference file_name = Folder.child("file"+imageUri.getLastPathSegment());
+
+
+            file_name.putFile(imageUri).addOnSuccessListener(taskSnapshot -> file_name.getDownloadUrl().addOnSuccessListener(uri -> {
+
+                HashMap<String,String> hashMap = new HashMap<>();
+                hashMap.put("link", String.valueOf(uri));
+                myRef.setValue(hashMap);
+
+                Toast.makeText( this, "Nota subida correctamente a la nube.", Toast.LENGTH_SHORT).show();
+
+            }));
+            /*--------*/
             goToMainActivity();
         }
     }

@@ -5,21 +5,28 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.minscreennotepad.NoteClasses.NoteImage;
+import com.google.firebase.database.DatabaseReference;
+
+import java.io.File;
+import java.io.FileOutputStream;
 
 public class ImageViewActivity extends AppCompatActivity {
     
     private SharedViewModel viewModel;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,7 +100,20 @@ public class ImageViewActivity extends AppCompatActivity {
             note.setTitle(noteTitle.getText().toString());
         }
     }
-
+    /**
+     * Compartir imagen
+     */
+    public void shareImage(MenuItem item) {
+        NoteImage note = (NoteImage)viewModel.getNoteToView();
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("image/*");
+        shareIntent.putExtra(Intent.EXTRA_STREAM, note.getFile());
+        try {
+            startActivity(Intent.createChooser(shareIntent, "Compartir vía"));
+        }catch (android.content.ActivityNotFoundException ex) {
+            ex.printStackTrace();
+        }
+    }
     /**
      * Muestra un diálogo al usuario preguntandole si quiere eliminar la nota.
      */
