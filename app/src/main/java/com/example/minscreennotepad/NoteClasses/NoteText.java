@@ -18,7 +18,19 @@ public class NoteText extends Note {
     public NoteText(String title, String body) {
         super(title);
         this.body = body;
-        id = "0";
+        id = title;
+    }
+
+    /**
+     * Constructor de NoteText
+     * @param title String con el titulo de la Note
+     * @param body  String con el texto de NoteText
+     * @param id  String con el id de NoteText
+     */
+    public NoteText(String title, String body, String id) {
+        super(title);
+        this.body = body;
+        this.id = id;
     }
 
     /**
@@ -27,6 +39,14 @@ public class NoteText extends Note {
      */
     public String getBody() {
         return body;
+    }
+
+    /**
+     * Getter del id de la nota
+     * @return String con el id de la nota
+     */
+    public String getId() {
+        return id;
     }
 
     /**

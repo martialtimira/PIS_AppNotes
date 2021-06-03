@@ -37,7 +37,8 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
 
         carteraUsuaris = new CarteraUsuaris();
         mToast = new MutableLiveData<>();
-        da = new DatabaseAdapter(this);
+        da = DatabaseAdapter.getInstance();
+        da.setListener(this);
     }
 
     public static SharedViewModel getInstance() {

@@ -37,8 +37,8 @@ import java.util.concurrent.Executor;
 
 public class DatabaseAdapter{
 
+    private volatile static DatabaseAdapter uniqueInstance;
     public static final String TAG = "DatabaseAdapter";
-
     public static FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -48,10 +48,24 @@ public class DatabaseAdapter{
     public static vmInterface listener;
     public static DatabaseAdapter databaseAdapter;
 
-    public DatabaseAdapter(vmInterface listener){
-        this.listener = listener;
+    public DatabaseAdapter(){
         databaseAdapter = this;
         FirebaseFirestore.setLoggingEnabled(true);
+    }
+
+    public static DatabaseAdapter getInstance() {
+        if (uniqueInstance == null) {
+            synchronized (SharedViewModel.class) {
+                if (uniqueInstance == null) {
+                    uniqueInstance = new DatabaseAdapter();
+                }
+            }
+        }
+        return uniqueInstance;
+    }
+
+    public void setListener(vmInterface listener){
+        this.listener = listener;
         initFirebase();
     }
 
@@ -140,12 +154,14 @@ public class DatabaseAdapter{
                             ArrayList<Note> retrieved_noteList = new ArrayList<Note>() ;
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
-                                if (document.get("id").equals("0") ) {
-                                    Log.d(TAG, "entro en id 0");
-                                    retrieved_noteList.add(new NoteText(document.getString("title"), document.getString("body")));
-                                } else if (document.get("id").equals("1") ) {
-                                    retrieved_noteList.add(new NoteImage(document.getString("title"), Uri.parse((String) document.get("body"))));
-                                } else if (document.get("id").equals("2")) {
+
+                                if (document.get("noteType").equals("text") ) {
+                                    retrieved_noteList.add(new NoteText(document.getString("title"), document.getString("body"), document.getId()));
+                                }
+                                else if (document.get("noteType").equals("image") ) {
+                                    retrieved_noteList.add(new NoteImage(document.getString("title"), Uri.parse((String) document.get("body")), document.getId()));
+                                }
+                                else if (document.get("noteType").equals("audio")) {
                                     //retrieved_noteList.add(new NoteAudio(document.getString("title"), document.getString("body")));
                                 }
                             }
@@ -157,113 +173,53 @@ public class DatabaseAdapter{
                 });
     }
 
-
     public void saveNoteText (String title, String body, String id) {
         // Create a new user with a first and last name
         Map<String, Object> note = new HashMap<>();
         note.put("title", title);
         note.put("body", body);
-        note.put("id", id);
+        note.put("noteType", "text");
         // Add a new document with a generated ID
-        db.collection(user.getEmail())
-                .add(note)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
-                    }
-                });
+        db.collection(user.getEmail()).document(id).set(note);
     }
 
-    public void saveNoteImage(String title, String body, String id) {
+    public void saveChangesNoteText (String title, String body, String id) {
         Map<String, Object> note = new HashMap<>();
         note.put("title", title);
         note.put("body", body);
-        note.put("id", id);
+        note.put("noteType", "text");
+        // Update data of already existing document
+        db.collection(user.getEmail()).document(id).update(note);
+    }
+
+    public void deleteNoteText (String id) {
+        // Delete an existing document
+        db.collection(user.getEmail()).document(id).delete();
+    }
+
+    public void saveNoteImage (String title, String body, String id) {
+        // Create a new user with a first and last name
+        Map<String, Object> note = new HashMap<>();
+        note.put("title", title);
+        note.put("body", body);
+        note.put("noteType", "image");
         // Add a new document with a generated ID
-        db.collection(user.getEmail())
-                .add(note)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
-                    }
-                });
+        db.collection(user.getEmail()).document(id).set(note);
     }
 
-/*
-    public void saveDocumentWithFile (String description, Uri file) {
-
-        StorageReference storageRef = storage.getReference();
-        StorageReference imageRef = storageRef.child("image"+file.getLastPathSegment());
-        UploadTask uploadTask = imageRef.putFile(file);
-
-        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-            @Override
-            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                if (!task.isSuccessful()) {
-                    throw task.getException();
-                }
-
-                // Continue with the task to get the download URL
-                return imageRef.getDownloadUrl();
-            }
-        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                if (task.isSuccessful()) {
-                    Uri downloadUri = task.getResult();
-                    saveNoteImage(description, downloadUri.toString());
-                } else {
-                    // Handle failures
-                    // ...
-                }
-            }
-        });
-
-
-        uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                Log.d(TAG, "Upload is " + progress + "% done");
-            }
-        });
+    public void saveChangesNoteImage (String title, String body, String id) {
+        Map<String, Object> note = new HashMap<>();
+        note.put("title", title);
+        note.put("body", body);
+        note.put("noteType", "image");
+        // Update data of already existing document
+        db.collection(user.getEmail()).document(id).update(note);
     }
-*/
 
-    /*
-    public HashMap<String, String> getDocuments () {
-        db.collection("audioCards")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                            }
-                        } else {
-                            Log.w(TAG, "Error getting documents.", task.getException());
-                        }
-                    }
-                });
-
-        return new HashMap<>();
+    public void deleteNoteImage (String id) {
+        // Delete an existing document
+        db.collection(user.getEmail()).document(id).delete();
     }
-    */
 }
 
 

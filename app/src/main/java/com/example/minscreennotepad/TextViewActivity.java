@@ -85,6 +85,9 @@ public class TextViewActivity extends AppCompatActivity {
             nullTitleDialog();
         }
         else {
+            DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
+            databaseAdapter.saveChangesNoteText(noteTitle.getText().toString(),noteText.getText().toString(), note.getId());
+
             note.setTitle(noteTitle.getText().toString());
             note.setBody(noteText.getText().toString());
             Toast.makeText(this, "Cambios guardados", Toast.LENGTH_SHORT).show();
@@ -100,10 +103,15 @@ public class TextViewActivity extends AppCompatActivity {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Confirmación");
         alert.setTitle("¿Seguro que quieres eliminar esta nota?");
+        NoteText note = (NoteText)viewModel.getNoteToView();
 
         alert.setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
+                //Eliminamos la nota en Firebase
+                databaseAdapter.deleteNoteText(note.getId());
+                //Eliminamos la nota a nivel local
                 viewModel.DeleteNoteToView();
                 Toast.makeText(TextViewActivity.this, "Nota eliminada", Toast.LENGTH_SHORT).show();
                 goToMainActivity();

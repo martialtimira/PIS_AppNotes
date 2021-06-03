@@ -10,6 +10,7 @@ public class NoteImage extends Note{
 
     Uri file;
     private final DatabaseAdapter adapter = DatabaseAdapter.databaseAdapter;
+
     /**
      * Constructor de NoteImage
      * @param title String con el titulo de la Note
@@ -18,7 +19,18 @@ public class NoteImage extends Note{
     public NoteImage(String title, Uri file) {
         super(title);
         this.file = file;
-        id = "1";
+        id = title;
+    }
+
+    /**
+     * Constructor de NoteImage
+     * @param title String con el titulo de la Note
+     * @param file  Uri que contiene el archivo de la imagen
+     */
+    public NoteImage(String title, Uri file, String id) {
+        super(title);
+        this.file = file;
+        this.id = id;
     }
 
     /**
@@ -27,6 +39,14 @@ public class NoteImage extends Note{
      */
     public Uri getFile() {
         return file;
+    }
+
+    /**
+     * Getter del id de la nota
+     * @return String con el id de la nota
+     */
+    public String getId() {
+        return id;
     }
 
     /**

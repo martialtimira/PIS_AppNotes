@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.minscreennotepad.NoteClasses.NoteImage;
+import com.example.minscreennotepad.NoteClasses.NoteText;
 
 public class ImageViewActivity extends AppCompatActivity {
     
@@ -82,6 +83,8 @@ public class ImageViewActivity extends AppCompatActivity {
         EditText noteTitle = (EditText) findViewById(R.id.imageTitle);
         NoteImage note = (NoteImage)viewModel.getNoteToView();
 
+        NoteImage noteImage = (NoteImage)viewModel.getNoteToView();
+
         if(!viewModel.isValidTitle(noteTitle.getText().toString()) &&
                 !noteTitle.getText().toString().equals(note.getTitle())) {
             sameTitleDialog();
@@ -90,6 +93,8 @@ public class ImageViewActivity extends AppCompatActivity {
             nullTitleDialog();
         }
         else {
+            DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
+            databaseAdapter.saveChangesNoteImage(noteTitle.getText().toString(),noteImage.getFile().toString(), noteImage.getId());
             note.setTitle(noteTitle.getText().toString());
         }
     }
@@ -102,9 +107,15 @@ public class ImageViewActivity extends AppCompatActivity {
         alert.setTitle("Confirmación.");
         alert.setTitle("¿Seguro que quieres eliminar esta nota?");
 
+        NoteImage noteImage = (NoteImage)viewModel.getNoteToView();
+
         alert.setPositiveButton("Eliminar.", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
+                //Eliminamos la nota en Firebase
+                databaseAdapter.deleteNoteImage(noteImage.getId());
+                //Eliminamos la nota a nivel local
                 viewModel.DeleteNoteToView();
                 Toast.makeText(ImageViewActivity.this, "Nota eliminada.", Toast.LENGTH_SHORT).show();
                 goToMainActivity();
