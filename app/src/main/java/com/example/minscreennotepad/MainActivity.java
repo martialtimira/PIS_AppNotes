@@ -136,9 +136,6 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()) {
-                            System.out.println((String)sharedpreferences.getAll().get("email"));
-                            System.out.println((String)sharedpreferences.getAll().get("password"));
-
                             viewModel.setDBUser(mAuth.getCurrentUser());
                             viewModel.setUserLoggedIn(true);
                         }
