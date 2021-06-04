@@ -217,7 +217,7 @@ public class AudioViewActivity extends AppCompatActivity {
         }
         else{
             DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
-            databaseAdapter.saveChangesNoteAudio(audioTitle.getText().toString(), noteAudio.getFilePath(), noteAudio.getFileLenght(), noteAudio.getId());
+            databaseAdapter.saveChangesNoteAudio(audioTitle.getText().toString(), noteAudio.getFileLenght(), noteAudio.getId());
 
             noteAudio.setTitle(audioTitle.getText().toString());
             Toast.makeText(this, "Cambios guardados.", Toast.LENGTH_SHORT).show();

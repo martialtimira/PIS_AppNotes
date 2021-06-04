@@ -70,7 +70,7 @@ public class NoteAudio extends Note {
 
     public void saveAudioNote() {
         Log.d("saveCard", "saveCard-> saveDocument");
-        adapter.saveNoteAudio(this.title, this.filePath, this.fileLenght, this.id);
+        adapter.saveNoteAudio(this.title, this.fileLenght, this.id);
     }
 }
 

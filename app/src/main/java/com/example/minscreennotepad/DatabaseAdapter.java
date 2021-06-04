@@ -233,7 +233,7 @@ public class DatabaseAdapter{
         String imageAdress = user.getUid() + "/" + id;
         deleteFileFromStorage(imageAdress);
     }
-    public void saveNoteAudio (String title, String filePath, long fileLength, String id) {
+    public void saveNoteAudio (String title, long fileLength, String id) {
         // Create a new user with a first and last name
         Map<String, Object> note = new HashMap<>();
         note.put("title", title);
@@ -245,10 +245,11 @@ public class DatabaseAdapter{
         db.collection(user.getEmail()).document(id).set(note);
     }
 
-    public void saveChangesNoteAudio (String title, String filePath, long fileLength, String id) {
+    public void saveChangesNoteAudio (String title, long fileLength, String id) {
         Map<String, Object> note = new HashMap<>();
         note.put("title", title);
-        note.put("path", filePath);
+        String audioAdress = (user.getUid() + "/" + id);
+        note.put("path", audioAdress);
         note.put("fileLength", fileLength);
         note.put("noteType", "audio");
         // Update data of already existing document
