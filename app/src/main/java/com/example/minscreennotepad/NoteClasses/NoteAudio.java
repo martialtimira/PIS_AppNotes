@@ -1,9 +1,15 @@
 package com.example.minscreennotepad.NoteClasses;
 
+import android.util.Log;
+
+import com.example.minscreennotepad.DatabaseAdapter;
+
 public class NoteAudio extends Note {
 
     long fileLenght; // Duracio en segons
     String filePath; //file path
+    private final DatabaseAdapter adapter = DatabaseAdapter.databaseAdapter;
+
 
     /**
      * Constructor de NoteAudio
@@ -17,6 +23,14 @@ public class NoteAudio extends Note {
         this.fileLenght = fileLenght;
         id = "2";
     }
+
+    public NoteAudio(String title, String filePath, long fileLenght, String id) {
+        super(title);
+        this.filePath = filePath;
+        this.fileLenght = fileLenght;
+        this.id= id;
+    }
+
 
     /**
      * Getter del "path" del archivo de audio
@@ -45,4 +59,18 @@ public class NoteAudio extends Note {
      * @param fileLenght long con la longitud del archivo de audio
      */
     public void setFileLenght(long fileLenght ){this.fileLenght = fileLenght;}
+
+    /**
+     * Getter del id de la nota
+     * @return String con el id de la nota
+     */
+    public String getId() {
+        return id;
+    }
+
+    public void saveAudioNote() {
+        Log.d("saveCard", "saveCard-> saveDocument");
+        adapter.saveNoteAudio(this.title, this.filePath, this.fileLenght, this.id);
+    }
 }
+

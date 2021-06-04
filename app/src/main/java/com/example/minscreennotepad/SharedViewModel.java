@@ -176,6 +176,9 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
     public void addImageNoteToFireBase(NoteImage noteImage) {
         noteImage.saveImageNote();
     }
+    public void addAudioNoteToFireBase(NoteAudio noteAudio) {
+        noteAudio.saveAudioNote();
+    }
 
     /**
      * Añade una nota de texto a la noteList a partir de su título y texto
@@ -229,6 +232,7 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
         NoteAudio audioNote = new NoteAudio(title, filePath, fileLength);
         // Añadimos nota de audio a la lista
         noteList.add(audioNote);
+        addAudioNoteToFireBase(audioNote);
     }
 
     public LiveData<String> getToast(){

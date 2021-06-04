@@ -162,7 +162,7 @@ public class DatabaseAdapter{
                                     retrieved_noteList.add(new NoteImage(document.getString("title"), Uri.parse((String) document.get("body")), document.getId()));
                                 }
                                 else if (document.get("noteType").equals("audio")) {
-                                    //retrieved_noteList.add(new NoteAudio(document.getString("title"), document.getString("body")));
+                                    retrieved_noteList.add(new NoteAudio(document.getString("title"), document.getString("body"), document.getLong("fileLenght"), document.getId()));
                                 }
                             }
                             listener.setCollection(retrieved_noteList);
@@ -217,6 +217,31 @@ public class DatabaseAdapter{
     }
 
     public void deleteNoteImage (String id) {
+        // Delete an existing document
+        db.collection(user.getEmail()).document(id).delete();
+    }
+    public void saveNoteAudio (String title, String filePath, long fileLength, String id) {
+        // Create a new user with a first and last name
+        Map<String, Object> note = new HashMap<>();
+        note.put("title", title);
+        note.put("path", filePath);
+        note.put("filelength", fileLength);
+        note.put("noteType", "audio");
+        // Add a new document with a generated ID
+        db.collection(user.getEmail()).document(id).set(note);
+    }
+
+    public void saveChangesNoteAudio (String title, String filePath, long fileLength, String id) {
+        Map<String, Object> note = new HashMap<>();
+        note.put("title", title);
+        note.put("path", filePath);
+        note.put("filelength", fileLength);
+        note.put("noteType", "audio");
+        // Update data of already existing document
+        db.collection(user.getEmail()).document(id).update(note);
+    }
+
+    public void deleteNoteAudio (String id) {
         // Delete an existing document
         db.collection(user.getEmail()).document(id).delete();
     }

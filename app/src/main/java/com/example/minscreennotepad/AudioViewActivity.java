@@ -216,9 +216,11 @@ public class AudioViewActivity extends AppCompatActivity {
             nullTitleDialog();
         }
         else{
+            DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
+            databaseAdapter.saveChangesNoteAudio(audioTitle.getText().toString(), noteAudio.getFilePath(), noteAudio.getFileLenght(), noteAudio.getId());
+
             noteAudio.setTitle(audioTitle.getText().toString());
             Toast.makeText(this, "Cambios guardados.", Toast.LENGTH_SHORT).show();
-            goToMainActivity();
         }
     }
 
@@ -231,9 +233,15 @@ public class AudioViewActivity extends AppCompatActivity {
         alert.setTitle("Confirmación.");
         alert.setTitle("¿Seguro que quieres eliminar esta nota?");
 
+        NoteAudio noteAudio = (NoteAudio) viewModel.getNoteToView();
+
         alert.setPositiveButton("Eliminar.", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
+                //Eliminamos la nota en Firebase
+                databaseAdapter.deleteNoteAudio(noteAudio.getId());
+                //Eliminamos la nota a nivel Local
                 viewModel.DeleteNoteToView();
                 Toast.makeText(AudioViewActivity.this, "Nota eliminada.", Toast.LENGTH_SHORT).show();
                 goToMainActivity();

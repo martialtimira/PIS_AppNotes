@@ -31,6 +31,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class AudioCreatorActivity extends AppCompatActivity {
 
@@ -38,6 +39,7 @@ public class AudioCreatorActivity extends AppCompatActivity {
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     private static String filePath = null;
     private long fileLenght;
+    private int maxDuration = 0;
 
     private MediaRecorder mRecorder = null;
     private ImageButton recordButton = null;
@@ -165,6 +167,7 @@ public class AudioCreatorActivity extends AppCompatActivity {
             goToMainActivity();
         }
 
+
     }
 
     /**
@@ -178,7 +181,7 @@ public class AudioCreatorActivity extends AppCompatActivity {
             String date = df.format(Calendar.getInstance().getTime());
             filePath =  getExternalCacheDir().getAbsolutePath()+ File.separator +date+".3gp";
             //Log.d("startRecording", audioTitle.getText().toString());
-            recordButton.setImageResource(R.drawable.pause_icon);
+            recordButton.setImageResource(R.drawable.stop_button);
 
             //inicia el cronometro
             mChronometer.setBase(SystemClock.elapsedRealtime());
@@ -187,6 +190,8 @@ public class AudioCreatorActivity extends AppCompatActivity {
             mRecorder = new MediaRecorder();
             mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
             mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+            maxDuration = 5*60*60; //5 minutos máxima duración
+            mRecorder.setMaxDuration(maxDuration);
             mRecorder.setOutputFile(filePath);
             mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 
@@ -200,24 +205,38 @@ public class AudioCreatorActivity extends AppCompatActivity {
             //keep screen on while recording
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+            while(start){
+                fileLenght = (SystemClock.elapsedRealtime() - mChronometer.getBase());
+                if(fileLenght == maxDuration){
+                    onStopRecording();
+                    limitExtensionDialog();
+                    start = false;
+                }
+            }
+
 
         } else {
-            //Finaliza la grabacion
-            recordButton.setImageResource(R.drawable.microphone);
-            mChronometer.stop();
-            mChronometer.setBase(SystemClock.elapsedRealtime());
-
-            try {
-                mRecorder.stop();
-                fileLenght = (SystemClock.elapsedRealtime() - mChronometer.getBase());
-                mRecorder.release();
-            } catch (Exception e){
-                Log.e(LOG_TAG, "excepción.", e);
-            }
-            mRecorder = null;
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            onStopRecording();
         }
     }
+
+    private void onStopRecording(){
+        //Finaliza la grabacion
+        recordButton.setImageResource(R.drawable.microphone);
+        mChronometer.stop();
+
+        try {
+            mRecorder.stop();
+            fileLenght = (SystemClock.elapsedRealtime() - mChronometer.getBase());
+            Log.d("audio length", "Value" + Float.toString(fileLenght));
+            mRecorder.release();
+        } catch (Exception e){
+            Log.e(LOG_TAG, "excepción.", e);
+        }
+        mRecorder = null;
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
 
     /**
      * Muestra una ventana de dialogo indicando que el título de la nota ya está en siendo usado por
@@ -227,6 +246,23 @@ public class AudioCreatorActivity extends AppCompatActivity {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Error");
         alert.setTitle("El título ya está en uso.");
+
+        alert.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        alert.create().show();
+    }
+    /**
+     * Muestra una ventana de dialogo indicando que el título de la nota ya está en siendo usado por
+     * otra.
+     */
+    public void limitExtensionDialog() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Error");
+        alert.setTitle("Duración máxima permitida: 5 minutos");
 
         alert.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
             @Override
