@@ -12,7 +12,7 @@
         android:layout_height="27dp"
         android:layout_marginStart="108dp"
         android:layout_marginTop="144dp"
-        android:text="Nombre de Usuario"
+        android:text="Dirección de Correo"
         android:textSize="20dp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
