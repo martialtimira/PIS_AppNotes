@@ -21,7 +21,7 @@ public class NoteAudio extends Note {
         super(title);
         this.filePath = filePath;
         this.fileLenght = fileLenght;
-        id = "2";
+        id = title;
     }
 
     public NoteAudio(String title, String filePath, long fileLenght, String id) {

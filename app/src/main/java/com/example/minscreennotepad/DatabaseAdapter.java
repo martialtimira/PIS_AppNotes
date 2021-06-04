@@ -1,6 +1,9 @@
 package com.example.minscreennotepad;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -28,6 +31,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,6 +45,7 @@ public class DatabaseAdapter{
     public static final String TAG = "DatabaseAdapter";
     public static FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
+    private StorageReference storageReference;
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser user;
 
@@ -78,6 +83,7 @@ public class DatabaseAdapter{
     public void initFirebase(){
 
         user = mAuth.getCurrentUser();
+        storageReference = FirebaseStorage.getInstance().getReference();
         if (user == null) {
             mAuth.signInAnonymously() // Fer amb user y password
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -162,7 +168,9 @@ public class DatabaseAdapter{
                                     retrieved_noteList.add(new NoteImage(document.getString("title"), Uri.parse((String) document.get("body")), document.getId()));
                                 }
                                 else if (document.get("noteType").equals("audio")) {
-                                    retrieved_noteList.add(new NoteAudio(document.getString("title"), document.getString("body"), document.getLong("fileLenght"), document.getId()));
+                                    NoteAudio noteAudio = new NoteAudio(document.getString("title"), null, document.getLong("filePath"), document.getId());
+                                    downloadAudio(document.getString("filePath"), noteAudio);
+                                    retrieved_noteList.add(noteAudio);
                                 }
                             }
                             listener.setCollection(retrieved_noteList);
@@ -225,7 +233,7 @@ public class DatabaseAdapter{
         Map<String, Object> note = new HashMap<>();
         note.put("title", title);
         note.put("path", filePath);
-        note.put("filelength", fileLength);
+        note.put("fileLength", fileLength);
         note.put("noteType", "audio");
         // Add a new document with a generated ID
         db.collection(user.getEmail()).document(id).set(note);
@@ -235,7 +243,7 @@ public class DatabaseAdapter{
         Map<String, Object> note = new HashMap<>();
         note.put("title", title);
         note.put("path", filePath);
-        note.put("filelength", fileLength);
+        note.put("fileLength", fileLength);
         note.put("noteType", "audio");
         // Update data of already existing document
         db.collection(user.getEmail()).document(id).update(note);
@@ -245,6 +253,27 @@ public class DatabaseAdapter{
         // Delete an existing document
         db.collection(user.getEmail()).document(id).delete();
     }
+    public void downloadAudio(String filePath, NoteAudio noteAudio) {
+        StorageReference fileRef = storageReference.child(filePath);
+        fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Log.d(TAG, "Download URL: " + uri.toString());
+                noteAudio.setFilePath(uri.getPath());
+            }
+
+        });
+    }
+    public void deleteAudioFromStorage(String filePath) {
+        StorageReference fileRef = storageReference.child(filePath);
+        fileRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d(TAG, "onSuccess: Audio deleted");
+            }
+        });
+    }
+
 }
 
 
