@@ -205,7 +205,7 @@ public class AudioCreatorActivity extends AppCompatActivity {
             //keep screen on while recording
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-            while(start){
+            /*while(start){
                 fileLenght = (SystemClock.elapsedRealtime() - mChronometer.getBase());
                 if(fileLenght == maxDuration){
                     onStopRecording();
@@ -214,9 +214,22 @@ public class AudioCreatorActivity extends AppCompatActivity {
                 }
             }
 
-
+             */
         } else {
-            onStopRecording();
+            //Finaliza la grabacion
+            recordButton.setImageResource(R.drawable.microphone);
+            mChronometer.stop();
+
+            try {
+                mRecorder.stop();
+                fileLenght = (SystemClock.elapsedRealtime() - mChronometer.getBase());
+                Log.d("audio length", "Value" + Float.toString(fileLenght));
+                mRecorder.release();
+            } catch (Exception e){
+                Log.e(LOG_TAG, "excepción.", e);
+            }
+            mRecorder = null;
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
     }
 

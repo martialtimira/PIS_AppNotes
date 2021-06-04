@@ -1,10 +1,12 @@
 package com.example.minscreennotepad;
 
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.minscreennotepad.NoteClasses.Note;
 import com.example.minscreennotepad.NoteClasses.NoteAudio;
@@ -17,6 +19,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -197,6 +200,22 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
         // Añadimos nota de audio a la lista
         noteList.add(audioNote);
         addAudioNoteToFireBase(audioNote);
+        uploadAudio(filePath);
+    }
+    public void uploadAudio(String filePath) {
+        Uri file = Uri.fromFile(new File(filePath));
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+        StorageReference fileRef = storageReference.child(filePath);
+        fileRef.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Uri downloadURL = taskSnapshot.getUploadSessionUri();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
+        });
     }
 
     public LiveData<String> getToast(){
