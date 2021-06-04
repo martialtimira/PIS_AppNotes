@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,7 +23,12 @@ import com.example.minscreennotepad.NoteClasses.Note;
 import com.example.minscreennotepad.NoteClasses.NoteAudio;
 import com.example.minscreennotepad.NoteClasses.NoteImage;
 import com.example.minscreennotepad.NoteClasses.NoteText;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements NoteListAdapter.OnNoteListener {
@@ -32,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
     private NoteListAdapter noteListAdapter;
     private SharedViewModel viewModel;
     private RecyclerView noteRecyclerView;
+    private SharedPreferences sharedpreferences;
+    private static final String mypreference = "mypref";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +70,17 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
      */
     public void init() {
         viewModel = SharedViewModel.getInstance();
-        if(!viewModel.isUserLoggedIn()) {
+
+        sharedpreferences = getApplicationContext().getSharedPreferences(mypreference, Context.MODE_PRIVATE);
+        sharedpreferences = getSharedPreferences(mypreference, Context.MODE_PRIVATE);
+
+        if(!viewModel.isUserLoggedIn() && !sharedpreferences.contains("email") && !sharedpreferences.contains("password")) {
             goToLoginActivity();
+        }
+        else{
+            loadSharedPreferences();
+            getSupportActionBar().setTitle("Notas de " + viewModel.getDBUser().getEmail());
+            viewModel.refreshNotes();
         }
         parentContext = this.getBaseContext();
         mActivity = this;
@@ -79,9 +96,19 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
      */
     @Override
     protected void onResume() {
+        sharedpreferences = getApplicationContext().getSharedPreferences(mypreference, Context.MODE_PRIVATE);
+        sharedpreferences = getSharedPreferences(mypreference, Context.MODE_PRIVATE);
+
         if(!viewModel.isUserLoggedIn()) {
-            this.finish();
-            goToLoginActivity();
+            if (sharedpreferences.contains("email") && sharedpreferences.contains("password")){
+                loadSharedPreferences();
+                getSupportActionBar().setTitle("Notas de " + viewModel.getDBUser().getEmail());
+                viewModel.refreshNotes();
+            }
+            else{
+                this.finish();
+                goToLoginActivity();
+            }
         }
         else {
             String email = viewModel.getDBUser().getEmail();
@@ -100,6 +127,33 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
         viewModel.setDBUser(null);
         viewModel.setUserLoggedIn(false);
         goToLoginActivity();
+    }
+
+    public void loadSharedPreferences(){
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        mAuth.signInWithEmailAndPassword((String)sharedpreferences.getAll().get("email"), (String)sharedpreferences.getAll().get("password"))
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()) {
+                            viewModel.setDBUser(mAuth.getCurrentUser());
+                            viewModel.setUserLoggedIn(true);
+                        }
+                        else {
+                            AlertDialog.Builder alert = new AlertDialog.Builder(parentContext);
+                            alert.setTitle("Error.");
+                            alert.setTitle(task.getException().getMessage());
+
+                            alert.setPositiveButton("Aceptar.", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+                                }
+                            });
+                            alert.create().show();
+                        }
+                    }
+                });
     }
 
     /**

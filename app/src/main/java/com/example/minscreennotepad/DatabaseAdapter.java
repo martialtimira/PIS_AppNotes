@@ -104,9 +104,11 @@ public class DatabaseAdapter{
 
         }
     }
+
     public void setUser(FirebaseUser user) {
         this.user = user;
     }
+
     public FirebaseUser getUser() {
         return this.user;
     }
