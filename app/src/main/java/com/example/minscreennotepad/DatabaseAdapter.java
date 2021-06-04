@@ -74,7 +74,6 @@ public class DatabaseAdapter{
         void setToast(String s);
     }
 
-
     public void initFirebase(){
 
         user = mAuth.getCurrentUser();
@@ -103,9 +102,11 @@ public class DatabaseAdapter{
 
         }
     }
+
     public void setUser(FirebaseUser user) {
         this.user = user;
     }
+
     public FirebaseUser getUser() {
         return this.user;
     }

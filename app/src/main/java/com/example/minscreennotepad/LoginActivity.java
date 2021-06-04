@@ -4,8 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -15,8 +17,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
+
+    private SharedPreferences sharedpreferences;
+    private static final String mypreference = "mypref";
+    private DatabaseAdapter databaseAdapter;
 
     SharedViewModel viewModel;
     @Override
@@ -25,6 +32,16 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         viewModel = SharedViewModel.getInstance();
         getSupportActionBar().setTitle("Inicio de sesión.");
+        databaseAdapter = DatabaseAdapter.getInstance();
+    }
+
+    public void saveSharedPreferences(String email, String password) {
+        sharedpreferences = getApplicationContext().getSharedPreferences(mypreference, Context.MODE_PRIVATE);
+        sharedpreferences = getSharedPreferences(mypreference, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString("email", email);
+        editor.putString("password", password);
+        editor.commit();
     }
 
     /**
@@ -46,6 +63,7 @@ public class LoginActivity extends AppCompatActivity {
                             if(task.isSuccessful()) {
                                 viewModel.setDBUser(mAuth.getCurrentUser());
                                 viewModel.setUserLoggedIn(true);
+                                saveSharedPreferences(userNameText.getText().toString(), passwordText.getText().toString());
                                 goToMainActivity();
                             }
                             else {
