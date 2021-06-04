@@ -33,6 +33,10 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements NoteListAdapter.OnNoteListener {
 
+    private final int maxNumText = 100;
+    private final int maxNumImage = 100;
+    private final int maxNumAudio = 100;
+
     private Context parentContext;
     private AppCompatActivity mActivity;
     private NoteListAdapter noteListAdapter;
@@ -107,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
         noteRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         noteRecyclerView.setAdapter(noteListAdapter);
         viewModel.setNoteListAdapter(noteListAdapter);
+        viewModel.setParentContext(parentContext);
     }
 
     /**
@@ -114,7 +119,6 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
      */
     @Override
     protected void onResume() {
-
         sharedpreferences = getApplicationContext().getSharedPreferences(mypreference, Context.MODE_PRIVATE);
         sharedpreferences = getSharedPreferences(mypreference, Context.MODE_PRIVATE);
 
@@ -192,13 +196,28 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
                 (dialog, which) -> {
                     switch (which) {
                         case 0:
-                            goToTextCreatorActivity();
+                            if(viewModel.getNumText()<maxNumText){
+                                goToTextCreatorActivity();
+                            }
+                            else{
+                                maxNumTextDialog();
+                            }
                             break;
                         case 1:
-                            goToAudioCreatorActivity();
+                            if(viewModel.getNumAudio()<maxNumAudio){
+                                goToAudioCreatorActivity();
+                            }
+                            else{
+                                maxNumAudiotDialog();
+                            }
                             break;
                         case 2:
-                            goToImageCreatorActivity();
+                            if(viewModel.getNumImage()<maxNumImage){
+                                goToImageCreatorActivity();
+                            }
+                            else{
+                                maxNumImagetDialog();
+                            }
                             break;
                         case 3:
                             Toast.makeText(view.getContext(), "", Toast.LENGTH_SHORT).show();
@@ -289,6 +308,42 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
             viewModel.setNoteToView(position);
             goToTextViewActivity();
         }
+    }
+
+    private void maxNumTextDialog() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Error.");
+        alert.setTitle("No puedes añadir más notas de texto");
+        alert.setPositiveButton("Aceptar.", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        alert.create().show();
+    }
+
+    private void maxNumImagetDialog() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Error.");
+        alert.setTitle("No puedes añadir más notas de imagen");
+        alert.setPositiveButton("Aceptar.", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        alert.create().show();
+    }
+
+    private void maxNumAudiotDialog() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Error.");
+        alert.setTitle("No puedes añadir más notas de audio");
+        alert.setPositiveButton("Aceptar.", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        alert.create().show();
     }
 
 }

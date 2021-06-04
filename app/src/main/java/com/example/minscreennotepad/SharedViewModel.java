@@ -1,9 +1,12 @@
 package com.example.minscreennotepad;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,11 +30,16 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
 
     private volatile static SharedViewModel uniqueInstance;
 
+    private int numText;
+    private int numImage;
+    private int numAudio;
+
     private boolean userLoggedIn;
     private List<Note> noteList;
     private Note noteToView;
     private final MutableLiveData<String> mToast;
     public static final String TAG = "ViewModel";
+    private Context parentContext;
     private NoteListAdapter noteListAdapter;
     private DatabaseAdapter da;
 
@@ -44,6 +52,9 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
         mToast = new MutableLiveData<>();
         da = DatabaseAdapter.getInstance();
         da.setListener(this);
+        numText = 0;
+        numImage = 0;
+        numAudio = 0;
     }
 
     public static SharedViewModel getInstance() {
@@ -59,6 +70,22 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
 
     public void setNoteListAdapter(NoteListAdapter noteListAdapter){
         this.noteListAdapter = noteListAdapter;
+    }
+
+    public void setParentContext(Context parentContext){
+        this.parentContext = parentContext;
+    }
+
+    public int getNumText(){
+        return numText;
+    }
+
+    public int getNumImage(){
+        return numImage;
+    }
+
+    public int getNumAudio(){
+        return numAudio;
     }
 
     /**
@@ -115,6 +142,15 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
      * Elimina la noteToView de la lista de notas
      */
     public void DeleteNoteToView() {
+        if (noteToView instanceof NoteText){
+            numText--;
+        }
+        else if ((noteToView instanceof NoteImage)){
+            numImage--;
+        }
+        else if ((noteToView instanceof NoteAudio)){
+            numAudio--;
+        }
         this.noteList.remove(noteToView);
     }
 
@@ -138,7 +174,7 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
         // Creamos nota de texto a partir de los datos pasados como parametros
         NoteText textNote = new NoteText(title, text);
         // Añadimos nota de texto a la lista
-        noteList.add(textNote);
+        addNote(textNote);
         addTextoNoteToFireBase(textNote);
     }
 
@@ -166,7 +202,7 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
         //Creamos nota de imagen a partir de los datos pasados como parametros
         NoteImage imageNote = new NoteImage(title, image);
         //Añadimos la nota de imagen a la lista
-        noteList.add(imageNote);
+        addNote(imageNote);
         addImageNoteToFireBase(imageNote);
         String fileAdress = (da.getUser().getUid() + "/" + title);
         uploadImage(fileAdress, image);
@@ -198,6 +234,7 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
         // Creamos nota de audio a partir de los datos pasados como parametros
         NoteAudio audioNote = new NoteAudio(title, filePath, fileLength);
         // Añadimos nota de audio a la lista
+        addNote(audioNote);
         noteList.add(audioNote);
         addAudioNoteToFireBase(audioNote);
         String fileAdress = (da.getUser().getUid() + "/" + title);
@@ -243,11 +280,28 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
     @Override
     public void setCollection(ArrayList<Note> noteList) {
         this.noteList.clear();
+        numText = 0;
+        numImage = 0;
+        numAudio = 0;
         for (Note note : noteList) {
             this.noteList.add(note);
         }
         //this.noteList.setValue(noteList);
         noteListAdapter.notifyDataSetChanged();
+    }
+
+    private void addNote (Note note){
+        if (note instanceof NoteText){
+            numText++;
+        }
+        if (note instanceof NoteImage){
+            numImage++;
+        }
+        if (note instanceof NoteAudio){
+            numAudio++;
+        }
+        this.noteList.add(note);
+
     }
 
     public void setToast(String t) {
