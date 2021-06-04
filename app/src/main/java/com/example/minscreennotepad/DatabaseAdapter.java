@@ -159,11 +159,14 @@ public class DatabaseAdapter{
         });
     }
 
-    private Uri getImageUriFromBitmap(Context context, Bitmap bitmap){
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "Title", null);
-        return Uri.parse(path.toString());
+    public void deleteImageFromStorage(String imageAdress) {
+        StorageReference fileRef = storageReference.child(imageAdress);
+        fileRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                    Log.d(TAG, "onSuccess: Img deleted");
+            }
+        });
     }
 
     public void saveNoteText (String title, String body, String id) {
@@ -190,21 +193,22 @@ public class DatabaseAdapter{
         db.collection(user.getEmail()).document(id).delete();
     }
 
-    public void saveNoteImage (String title, String body, String id) {
+    public void saveNoteImage (String title, String id) {
         // Create a new user with a first and last name
         Map<String, Object> note = new HashMap<>();
         note.put("title", title);
-        String imageAdress = (user.getUid() + "/" + title);
+        String imageAdress = (user.getUid() + "/" + id);
         note.put("body", imageAdress);
         note.put("noteType", "image");
         // Add a new document with a generated ID
         db.collection(user.getEmail()).document(id).set(note);
     }
 
-    public void saveChangesNoteImage (String title, String body, String id) {
+    public void saveChangesNoteImage (String title, String id) {
         Map<String, Object> note = new HashMap<>();
         note.put("title", title);
-        note.put("body", body);
+        String imageAdress = (user.getUid() + "/" + id);
+        note.put("body", imageAdress);
         note.put("noteType", "image");
         // Update data of already existing document
         db.collection(user.getEmail()).document(id).update(note);
@@ -213,6 +217,8 @@ public class DatabaseAdapter{
     public void deleteNoteImage (String id) {
         // Delete an existing document
         db.collection(user.getEmail()).document(id).delete();
+        String imageAdress = user.getUid() + "/" + id;
+        deleteImageFromStorage(imageAdress);
     }
 }
 
