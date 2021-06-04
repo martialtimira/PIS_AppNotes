@@ -31,7 +31,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 public class AudioCreatorActivity extends AppCompatActivity {
 
@@ -59,7 +58,6 @@ public class AudioCreatorActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
         mChronometer = (Chronometer) findViewById(R.id.chronometer);
-        //audioTitle = findViewById(R.id.audio_title);
         recordButton = findViewById(R.id.record_btn);
         recordButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -204,17 +202,6 @@ public class AudioCreatorActivity extends AppCompatActivity {
             }
             //keep screen on while recording
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-            /*while(start){
-                fileLenght = (SystemClock.elapsedRealtime() - mChronometer.getBase());
-                if(fileLenght == maxDuration){
-                    onStopRecording();
-                    limitExtensionDialog();
-                    start = false;
-                }
-            }
-
-             */
         } else {
             //Finaliza la grabacion
             recordButton.setImageResource(R.drawable.microphone);

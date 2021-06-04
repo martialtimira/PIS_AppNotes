@@ -9,7 +9,6 @@ import com.example.minscreennotepad.DatabaseAdapter;
 public class NoteImage extends Note{
 
     Uri file;
-    private final DatabaseAdapter adapter = DatabaseAdapter.databaseAdapter;
 
     /**
      * Constructor de NoteImage

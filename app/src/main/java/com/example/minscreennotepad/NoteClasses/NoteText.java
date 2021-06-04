@@ -7,7 +7,6 @@ import com.example.minscreennotepad.DatabaseAdapter;
 public class NoteText extends Note {
 
     String body;
-    private final DatabaseAdapter adapter = DatabaseAdapter.databaseAdapter;
 
 
     /**

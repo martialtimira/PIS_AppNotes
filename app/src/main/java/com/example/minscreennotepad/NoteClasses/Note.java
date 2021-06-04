@@ -1,11 +1,14 @@
 package com.example.minscreennotepad.NoteClasses;
 
+import com.example.minscreennotepad.DatabaseAdapter;
+
 import java.util.Objects;
 
 public class Note {
 
     String title;
     String id;
+    final DatabaseAdapter adapter = DatabaseAdapter.databaseAdapter;
 
     /**
      * constructor de note

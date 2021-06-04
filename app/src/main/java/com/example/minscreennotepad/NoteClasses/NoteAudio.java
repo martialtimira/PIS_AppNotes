@@ -8,7 +8,6 @@ public class NoteAudio extends Note {
 
     long fileLenght; // Duracio en segons
     String filePath; //file path
-    private final DatabaseAdapter adapter = DatabaseAdapter.databaseAdapter;
 
 
     /**

@@ -34,7 +34,6 @@ public class DatabaseAdapter{
     private volatile static DatabaseAdapter uniqueInstance;
     public static final String TAG = "DatabaseAdapter";
     public static FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private StorageReference storageReference;
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser user;

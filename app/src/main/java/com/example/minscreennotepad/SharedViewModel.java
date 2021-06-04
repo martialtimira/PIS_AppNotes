@@ -1,15 +1,11 @@
 package com.example.minscreennotepad;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.net.Uri;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.minscreennotepad.NoteClasses.Note;
 import com.example.minscreennotepad.NoteClasses.NoteAudio;
