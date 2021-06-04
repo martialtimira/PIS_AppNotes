@@ -21,9 +21,8 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
 
     private volatile static SharedViewModel uniqueInstance;
 
-    private User loggedInUser;
+    private boolean userLoggedIn;
     private List<Note> noteList;
-    private CarteraUsuaris carteraUsuaris;
     private Note noteToView;
     private final MutableLiveData<String> mToast;
     public static final String TAG = "ViewModel";
@@ -35,8 +34,7 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
      */
     private SharedViewModel(){
         noteList = new ArrayList<Note>();
-
-        carteraUsuaris = new CarteraUsuaris();
+        userLoggedIn = false;
         mToast = new MutableLiveData<>();
         da = DatabaseAdapter.getInstance();
         da.setListener(this);
@@ -55,22 +53,6 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
 
     public void setNoteListAdapter(NoteListAdapter noteListAdapter){
         this.noteListAdapter = noteListAdapter;
-    }
-
-    /**
-     * Getter del usuario logueado
-     * @return User logueado
-     */
-    public User getLoggedInUser() {
-        return loggedInUser;
-    }
-
-    /**
-     * Setter de loggedInUser
-     * @param loggedInUser nuevo usuario logueado
-     */
-    public void setLoggedInUser(User loggedInUser) {
-        this.loggedInUser = loggedInUser;
     }
 
     /**
@@ -122,48 +104,6 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
         return this.noteToView;
     }
 
-    /**
-     * Intenta iniciar sesión con un usuario a partir de su nombre y contraseña
-     * @param userName String con el nombre de usuario
-     * @param password String con la Contraseña
-     * @return String con el estado del login
-     */
-    public String loginUser(String userName, String password) {
-        String returnStatement = "Inicio de sesión correcto.";
-        User user = carteraUsuaris.find(userName);
-        if(user != null) {
-            if (user.getPassword().equals(password)){
-                loggedInUser = user;
-                noteList = user.getNoteList();
-                da.signIn(userName,password);
-            }
-            else {
-                returnStatement = "Usuario/contraseña incorrectos.";
-            }
-        }
-        else {
-            returnStatement = "Usuario no existe.";
-        }
-        return returnStatement;
-    }
-
-    /**
-     * Intenta registrar un nuevo usuario a partir de un nombre y contraseña
-     * @param userName String del nombre del usuario
-     * @param password String de la contraseña del usuario
-     * @return String del estado del registro
-     */
-    public String signUpUser(String userName, String password) {
-
-        if(carteraUsuaris.signUpUser(new User(userName, password))) {
-            da.createAccount(userName, password);
-            return "Usuario registrado.";
-        }
-        else{
-            return "El nombre de usuario ya existe.";
-        }
-
-    }
 
     /**
      * Elimina la noteToView de la lista de notas
@@ -237,9 +177,20 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
     public LiveData<String> getToast(){
         return mToast;
     }
-
+    public boolean isUserLoggedIn() {
+        return userLoggedIn;
+    }
+    public void setUserLoggedIn(boolean status) {
+        userLoggedIn = status;
+    }
     public void setDBUser(FirebaseUser user) {
         da.setUser(user);
+    }
+    public FirebaseUser getDBUser() {
+        return da.getUser();
+    }
+    public void refreshNotes() {
+        da.getCollection();
     }
 
     //communicates user inputs and updates the result in the viewModel

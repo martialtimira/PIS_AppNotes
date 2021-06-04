@@ -106,43 +106,8 @@ public class DatabaseAdapter{
     public void setUser(FirebaseUser user) {
         this.user = user;
     }
-    public void createAccount(String email, String password){
-        //String realEmail = email + "@gmail.com";
-        mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()){
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d(TAG, "createUserWithEmail:success");
-                    user = mAuth.getCurrentUser();
-                }
-                else{
-                    // If sign in fails, display a message to the user.
-                    Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                    listener.setToast("Authentication failed.");
-                }
-            }
-        });
-    }
-
-    public void signIn(String email, String password) {
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithEmail:success");
-                            user = mAuth.getCurrentUser();
-                            getCollection();
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            listener.setToast("Authentication failed.");
-                            user = null;
-                            }
-                        }
-        });
+    public FirebaseUser getUser() {
+        return this.user;
     }
 
     public void getCollection(){

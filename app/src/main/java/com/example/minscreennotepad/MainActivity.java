@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
      */
     public void init() {
         viewModel = SharedViewModel.getInstance();
-        if(viewModel.getLoggedInUser() == null) {
+        if(!viewModel.isUserLoggedIn()) {
             goToLoginActivity();
         }
         parentContext = this.getBaseContext();
@@ -79,12 +79,13 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
      */
     @Override
     protected void onResume() {
-        if(viewModel.getLoggedInUser() == null) {
+        if(!viewModel.isUserLoggedIn()) {
             this.finish();
             goToLoginActivity();
         }
         else {
-            getSupportActionBar().setTitle("Notas de " + viewModel.getLoggedInUser().getUserName());
+            getSupportActionBar().setTitle("Notas de " + viewModel.getDBUser().getEmail());
+            viewModel.refreshNotes();
         }
         super.onResume();
     }
@@ -93,7 +94,8 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
      * Cierra sesión del usuario actual
      */
     private void logout() {
-        viewModel.setLoggedInUser(null);
+        viewModel.setDBUser(null);
+        viewModel.setUserLoggedIn(false);
         goToLoginActivity();
     }
 
