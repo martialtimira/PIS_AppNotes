@@ -86,12 +86,18 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
             else{
                 this.finish();
                 goToLoginActivity();
-                getSupportActionBar().setTitle("Notas de " + viewModel.getDBUser().getEmail());
+                String email = viewModel.getDBUser().getEmail();
+                int atIndex = email.indexOf("@");
+                email = email.substring(0, atIndex);
+                getSupportActionBar().setTitle("Notas de " + email);
                 viewModel.refreshNotes();
             }
         }
 
-        getSupportActionBar().setTitle("Notas de " + viewModel.getDBUser().getEmail());
+        String email = viewModel.getDBUser().getEmail();
+        int atIndex = email.indexOf("@");
+        email = email.substring(0, atIndex);
+        getSupportActionBar().setTitle("Notas de " + email);
         viewModel.refreshNotes();
 
         parentContext = this.getBaseContext();
@@ -115,7 +121,10 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
         if(!viewModel.isUserLoggedIn()) {
             if (sharedpreferences.contains("email") && sharedpreferences.contains("password")){
                 loadSharedPreferences();
-                getSupportActionBar().setTitle("Notas de " + viewModel.getDBUser().getEmail());
+                String email = viewModel.getDBUser().getEmail();
+                int atIndex = email.indexOf("@");
+                email = email.substring(0, atIndex);
+                getSupportActionBar().setTitle("Notas de " + email);
                 viewModel.refreshNotes();
             }
             else{
@@ -124,7 +133,10 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
             }
         }
         else {
-            getSupportActionBar().setTitle("Notas de " + viewModel.getDBUser().getEmail());
+            String email = viewModel.getDBUser().getEmail();
+            int atIndex = email.indexOf("@");
+            email = email.substring(0, atIndex);
+            getSupportActionBar().setTitle("Notas de " + email);
             viewModel.refreshNotes();
         }
 
