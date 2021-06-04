@@ -1,40 +1,32 @@
 package com.example.minscreennotepad;
 
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 
 import com.example.minscreennotepad.NoteClasses.Note;
 import com.example.minscreennotepad.NoteClasses.NoteAudio;
 import com.example.minscreennotepad.NoteClasses.NoteImage;
 import com.example.minscreennotepad.NoteClasses.NoteText;
-import com.google.android.gms.common.util.ScopeUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.android.gms.tasks.Continuation;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Executor;
 
 
 public class DatabaseAdapter{
@@ -139,8 +131,9 @@ public class DatabaseAdapter{
                                     retrieved_noteList.add(noteImage);
                                 }
                                 else if (document.get("noteType").equals("audio")) {
-                                    NoteAudio noteAudio = new NoteAudio(document.getString("title"), null, document.getLong("filePath"), document.getId());
-                                    downloadAudio(document.getString("filePath"), noteAudio);
+                                    NoteAudio noteAudio = new NoteAudio(document.getString("title"), null,
+                                            document.getLong("fileLength"), document.getId());
+                                    downloadAudio(document.getString("path"), noteAudio);
                                     retrieved_noteList.add(noteAudio);
                                 }
                             }
@@ -153,7 +146,6 @@ public class DatabaseAdapter{
     }
 
     public void downloadImage(String imageAdress, NoteImage noteImage) {
-
         StorageReference fileRef = storageReference.child(imageAdress);
         fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -164,7 +156,23 @@ public class DatabaseAdapter{
         });
     }
 
-    public void deleteImageFromStorage(String imageAdress) {
+    public void downloadAudio(String audioAdress, NoteAudio noteAudio) {
+        StorageReference fileRef = storageReference.child(audioAdress);
+        File localFile = null;
+        try {
+             localFile = File.createTempFile("Audio", "3gpp");
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+        noteAudio.setFilePath(localFile.getPath());
+        fileRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+            }
+        });
+    }
+
+    public void deleteFileFromStorage(String imageAdress) {
         StorageReference fileRef = storageReference.child(imageAdress);
         fileRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -223,13 +231,14 @@ public class DatabaseAdapter{
         // Delete an existing document
         db.collection(user.getEmail()).document(id).delete();
         String imageAdress = user.getUid() + "/" + id;
-        deleteImageFromStorage(imageAdress);
+        deleteFileFromStorage(imageAdress);
     }
     public void saveNoteAudio (String title, String filePath, long fileLength, String id) {
         // Create a new user with a first and last name
         Map<String, Object> note = new HashMap<>();
         note.put("title", title);
-        note.put("path", filePath);
+        String audioAdress = (user.getUid() + "/" + id);
+        note.put("path", audioAdress);
         note.put("fileLength", fileLength);
         note.put("noteType", "audio");
         // Add a new document with a generated ID
@@ -249,26 +258,8 @@ public class DatabaseAdapter{
     public void deleteNoteAudio (String id) {
         // Delete an existing document
         db.collection(user.getEmail()).document(id).delete();
-    }
-    public void downloadAudio(String filePath, NoteAudio noteAudio) {
-        StorageReference fileRef = storageReference.child(filePath);
-        fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Log.d(TAG, "Download URL: " + uri.toString());
-                noteAudio.setFilePath(uri.getPath());
-            }
-
-        });
-    }
-    public void deleteAudioFromStorage(String filePath) {
-        StorageReference fileRef = storageReference.child(filePath);
-        fileRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Log.d(TAG, "onSuccess: Audio deleted");
-            }
-        });
+        String audioAdress = user.getUid() + "/" + id;
+        deleteFileFromStorage(audioAdress);
     }
 
 }

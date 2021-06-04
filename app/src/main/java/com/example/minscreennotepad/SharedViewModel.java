@@ -200,12 +200,14 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
         // Añadimos nota de audio a la lista
         noteList.add(audioNote);
         addAudioNoteToFireBase(audioNote);
-        uploadAudio(filePath);
+        String fileAdress = (da.getUser().getUid() + "/" + title);
+        uploadAudio(fileAdress, filePath);
     }
-    public void uploadAudio(String filePath) {
+
+    public void uploadAudio(String adress, String filePath) {
         Uri file = Uri.fromFile(new File(filePath));
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-        StorageReference fileRef = storageReference.child(filePath);
+        StorageReference fileRef = storageReference.child(adress);
         fileRef.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
