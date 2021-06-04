@@ -43,7 +43,7 @@ public class DatabaseAdapter{
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser user;
-
+    public String publicReturnStatement;
 
     public static vmInterface listener;
     public static DatabaseAdapter databaseAdapter;
@@ -103,8 +103,11 @@ public class DatabaseAdapter{
 
         }
     }
-
+    public void setUser(FirebaseUser user) {
+        this.user = user;
+    }
     public void createAccount(String email, String password){
+        //String realEmail = email + "@gmail.com";
         mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -120,7 +123,6 @@ public class DatabaseAdapter{
                 }
             }
         });
-
     }
 
     public void signIn(String email, String password) {
@@ -137,6 +139,7 @@ public class DatabaseAdapter{
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             listener.setToast("Authentication failed.");
+                            user = null;
                             }
                         }
         });

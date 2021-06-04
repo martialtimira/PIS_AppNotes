@@ -1,14 +1,21 @@
 package com.example.minscreennotepad;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -87,24 +94,30 @@ public class SignUpActivity extends AppCompatActivity {
         EditText password = (EditText) findViewById(R.id.signupPassword_textEdit);
         EditText passwodR = (EditText) findViewById(R.id.signupRepeatPassword_textEdit);
 
-        if(userName.getText().toString().equals("") || passwodR.getText().toString().equals("") ||
+        if (userName.getText().toString().equals("") || passwodR.getText().toString().equals("") ||
                 password.getText().toString().equals("")) {
             emptyFieldsDialog();
         }
         else {
             if (password.getText().toString().equals(passwodR.getText().toString())) {
-                String signupStatus = viewModel.signUpUser(userName.getText().toString(), password.getText().toString());
-                if (signupStatus.equals("Usuario registrado.")) {
-                    this.finish();
-                } else {
-                    signUpErrorDialog(signupStatus);
-                }
-            } else {
+                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                mAuth.createUserWithEmailAndPassword(userName.getText().toString(), password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            viewModel.setDBUser(mAuth.getCurrentUser());
+                            finish();
+                        } else {
+                            signUpErrorDialog(task.getException().getMessage());
+                        }
+                    }
+                });
+            }
+            else {
                 passwordsDontMatchDialog();
             }
         }
     }
-
     /**
      * Muestra un diálogo al usuario informándole del error que ha habido durante el registro
      * @param signUpStatus String del estado del registro(error)

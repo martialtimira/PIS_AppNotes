@@ -11,6 +11,7 @@ import com.example.minscreennotepad.NoteClasses.Note;
 import com.example.minscreennotepad.NoteClasses.NoteAudio;
 import com.example.minscreennotepad.NoteClasses.NoteImage;
 import com.example.minscreennotepad.NoteClasses.NoteText;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
@@ -153,6 +154,7 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
      * @return String del estado del registro
      */
     public String signUpUser(String userName, String password) {
+
         if(carteraUsuaris.signUpUser(new User(userName, password))) {
             da.createAccount(userName, password);
             return "Usuario registrado.";
@@ -160,6 +162,7 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
         else{
             return "El nombre de usuario ya existe.";
         }
+
     }
 
     /**
@@ -235,9 +238,14 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
         return mToast;
     }
 
+    public void setDBUser(FirebaseUser user) {
+        da.setUser(user);
+    }
+
     //communicates user inputs and updates the result in the viewModel
     @Override
     public void setCollection(ArrayList<Note> noteList) {
+        this.noteList.clear();
         for (Note note : noteList) {
             this.noteList.add(note);
         }

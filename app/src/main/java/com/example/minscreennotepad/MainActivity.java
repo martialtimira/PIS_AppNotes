@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
     @Override
     protected void onResume() {
         if(viewModel.getLoggedInUser() == null) {
+            this.finish();
             goToLoginActivity();
         }
         else {
