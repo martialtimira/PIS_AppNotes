@@ -74,14 +74,26 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
         sharedpreferences = getApplicationContext().getSharedPreferences(mypreference, Context.MODE_PRIVATE);
         sharedpreferences = getSharedPreferences(mypreference, Context.MODE_PRIVATE);
 
-        if(!viewModel.isUserLoggedIn() && !sharedpreferences.contains("email") && !sharedpreferences.contains("password")) {
-            goToLoginActivity();
+        if(!viewModel.isUserLoggedIn()) {
+            if (sharedpreferences.contains("email") && sharedpreferences.contains("password")){
+                loadSharedPreferences();
+                String email = viewModel.getDBUser().getEmail();
+                int atIndex = email.indexOf("@");
+                email = email.substring(0, atIndex);
+                getSupportActionBar().setTitle("Notas de " + email);
+                viewModel.refreshNotes();
+            }
+            else{
+                this.finish();
+                goToLoginActivity();
+                getSupportActionBar().setTitle("Notas de " + viewModel.getDBUser().getEmail());
+                viewModel.refreshNotes();
+            }
         }
-        else{
-            loadSharedPreferences();
-            getSupportActionBar().setTitle("Notas de " + viewModel.getDBUser().getEmail());
-            viewModel.refreshNotes();
-        }
+
+        getSupportActionBar().setTitle("Notas de " + viewModel.getDBUser().getEmail());
+        viewModel.refreshNotes();
+
         parentContext = this.getBaseContext();
         mActivity = this;
         noteListAdapter = new NoteListAdapter(viewModel.getNoteList(), this, this);
@@ -96,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
      */
     @Override
     protected void onResume() {
+
         sharedpreferences = getApplicationContext().getSharedPreferences(mypreference, Context.MODE_PRIVATE);
         sharedpreferences = getSharedPreferences(mypreference, Context.MODE_PRIVATE);
 
@@ -111,12 +124,10 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
             }
         }
         else {
-            String email = viewModel.getDBUser().getEmail();
-            int atIndex = email.indexOf("@");
-            email = email.substring(0, atIndex);
-            getSupportActionBar().setTitle("Notas de " + email);
+            getSupportActionBar().setTitle("Notas de " + viewModel.getDBUser().getEmail());
             viewModel.refreshNotes();
         }
+
         super.onResume();
     }
 
