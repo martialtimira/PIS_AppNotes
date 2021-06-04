@@ -1,17 +1,21 @@
 package com.example.minscreennotepad;
 
 import android.net.Uri;
-import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.minscreennotepad.NoteClasses.Note;
 import com.example.minscreennotepad.NoteClasses.NoteAudio;
 import com.example.minscreennotepad.NoteClasses.NoteImage;
 import com.example.minscreennotepad.NoteClasses.NoteText;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +24,8 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
 
     private volatile static SharedViewModel uniqueInstance;
 
-    private User loggedInUser;
+    private boolean userLoggedIn;
     private List<Note> noteList;
-    private CarteraUsuaris carteraUsuaris;
     private Note noteToView;
     private final MutableLiveData<String> mToast;
     public static final String TAG = "ViewModel";
@@ -34,8 +37,7 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
      */
     private SharedViewModel(){
         noteList = new ArrayList<Note>();
-
-        carteraUsuaris = new CarteraUsuaris();
+        userLoggedIn = false;
         mToast = new MutableLiveData<>();
         da = DatabaseAdapter.getInstance();
         da.setListener(this);
@@ -54,22 +56,6 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
 
     public void setNoteListAdapter(NoteListAdapter noteListAdapter){
         this.noteListAdapter = noteListAdapter;
-    }
-
-    /**
-     * Getter del usuario logueado
-     * @return User logueado
-     */
-    public User getLoggedInUser() {
-        return loggedInUser;
-    }
-
-    /**
-     * Setter de loggedInUser
-     * @param loggedInUser nuevo usuario logueado
-     */
-    public void setLoggedInUser(User loggedInUser) {
-        this.loggedInUser = loggedInUser;
     }
 
     /**
@@ -121,46 +107,6 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
         return this.noteToView;
     }
 
-    /**
-     * Intenta iniciar sesión con un usuario a partir de su nombre y contraseña
-     * @param userName String con el nombre de usuario
-     * @param password String con la Contraseña
-     * @return String con el estado del login
-     */
-    public String loginUser(String userName, String password) {
-        String returnStatement = "Inicio de sesión correcto.";
-        User user = carteraUsuaris.find(userName);
-        if(user != null) {
-            if (user.getPassword().equals(password)){
-                loggedInUser = user;
-                noteList = user.getNoteList();
-                da.signIn(userName,password);
-            }
-            else {
-                returnStatement = "Usuario/contraseña incorrectos.";
-            }
-        }
-        else {
-            returnStatement = "Usuario no existe.";
-        }
-        return returnStatement;
-    }
-
-    /**
-     * Intenta registrar un nuevo usuario a partir de un nombre y contraseña
-     * @param userName String del nombre del usuario
-     * @param password String de la contraseña del usuario
-     * @return String del estado del registro
-     */
-    public String signUpUser(String userName, String password) {
-        if(carteraUsuaris.signUpUser(new User(userName, password))) {
-            da.createAccount(userName, password);
-            return "Usuario registrado.";
-        }
-        else{
-            return "El nombre de usuario ya existe.";
-        }
-    }
 
     /**
      * Elimina la noteToView de la lista de notas
@@ -219,6 +165,24 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
         //Añadimos la nota de imagen a la lista
         noteList.add(imageNote);
         addImageNoteToFireBase(imageNote);
+        String fileAdress = (da.getUser().getUid() + "/" + title);
+        uploadImage(fileAdress, image);
+    }
+
+    public void uploadImage(String adress, Uri file) {
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+        StorageReference fileRef = storageReference.child(adress);
+        fileRef.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Uri downloadURL = taskSnapshot.getUploadSessionUri();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
     }
 
     /**
@@ -238,10 +202,26 @@ public class SharedViewModel extends androidx.lifecycle.ViewModel implements Dat
     public LiveData<String> getToast(){
         return mToast;
     }
+    public boolean isUserLoggedIn() {
+        return userLoggedIn;
+    }
+    public void setUserLoggedIn(boolean status) {
+        userLoggedIn = status;
+    }
+    public void setDBUser(FirebaseUser user) {
+        da.setUser(user);
+    }
+    public FirebaseUser getDBUser() {
+        return da.getUser();
+    }
+    public void refreshNotes() {
+        da.getCollection();
+    }
 
     //communicates user inputs and updates the result in the viewModel
     @Override
     public void setCollection(ArrayList<Note> noteList) {
+        this.noteList.clear();
         for (Note note : noteList) {
             this.noteList.add(note);
         }

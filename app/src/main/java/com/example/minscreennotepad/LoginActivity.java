@@ -1,16 +1,29 @@
 package com.example.minscreennotepad;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class LoginActivity extends AppCompatActivity {
+
+    private SharedPreferences sharedpreferences;
+    private static final String mypreference = "mypref";
+    private DatabaseAdapter databaseAdapter;
 
     SharedViewModel viewModel;
     @Override
@@ -19,6 +32,16 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         viewModel = SharedViewModel.getInstance();
         getSupportActionBar().setTitle("Inicio de sesión.");
+        databaseAdapter = DatabaseAdapter.getInstance();
+    }
+
+    public void saveSharedPreferences(String email, String password) {
+        sharedpreferences = getApplicationContext().getSharedPreferences(mypreference, Context.MODE_PRIVATE);
+        sharedpreferences = getSharedPreferences(mypreference, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString("email", email);
+        editor.putString("password", password);
+        editor.commit();
     }
 
     /**
@@ -28,12 +51,26 @@ public class LoginActivity extends AppCompatActivity {
     public void loginButtonClick(View view) {
         EditText userNameText = (EditText) findViewById(R.id.loginUsername_TextEdit);
         EditText passwordText = (EditText) findViewById(R.id.loginPassword_textEdit);
-        String loginStatus = viewModel.loginUser(userNameText.getText().toString(), passwordText.getText().toString());
-        if(loginStatus.equals("Inicio de sesión correcto.")){
-            goToMainActivity();
+        if(userNameText.getText().toString().equals("") || passwordText.getText().toString().equals("")) {
+            loginErrorDialog("Hay campos vacíos");
         }
         else {
-            loginErrorDialog(loginStatus);
+            FirebaseAuth mAuth = FirebaseAuth.getInstance();
+            mAuth.signInWithEmailAndPassword(userNameText.getText().toString(), passwordText.getText().toString())
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if(task.isSuccessful()) {
+                                viewModel.setDBUser(mAuth.getCurrentUser());
+                                viewModel.setUserLoggedIn(true);
+                                saveSharedPreferences(userNameText.getText().toString(), passwordText.getText().toString());
+                                goToMainActivity();
+                            }
+                            else {
+                                loginErrorDialog(task.getException().getMessage());
+                            }
+                        }
+                    });
         }
     }
 
