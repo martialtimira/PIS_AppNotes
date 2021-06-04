@@ -29,7 +29,7 @@ public class ImageViewActivity extends AppCompatActivity {
         
         viewModel = SharedViewModel.getInstance();
 
-        getSupportActionBar().setTitle("Ver nota de texto");
+        getSupportActionBar().setTitle("Ver nota de imagen");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         
