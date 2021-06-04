@@ -153,6 +153,11 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
     private void logout() {
         viewModel.setDBUser(null);
         viewModel.setUserLoggedIn(false);
+
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.clear();
+        editor.commit();
+
         goToLoginActivity();
     }
 
@@ -167,17 +172,7 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
                             viewModel.setUserLoggedIn(true);
                         }
                         else {
-                            AlertDialog.Builder alert = new AlertDialog.Builder(parentContext);
-                            alert.setTitle("Error.");
-                            alert.setTitle(task.getException().getMessage());
-
-                            alert.setPositiveButton("Aceptar.", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                }
-                            });
-                            alert.create().show();
+                            goToLoginActivity();
                         }
                     }
                 });

@@ -81,7 +81,6 @@ public class DatabaseAdapter{
                                 // If sign in fails, display a message to the user.
                                 Log.w(TAG, "signInAnonymously:failure", task.getException());
                                 listener.setToast("Authentication failed.");
-
                             }
                         }
                     });
