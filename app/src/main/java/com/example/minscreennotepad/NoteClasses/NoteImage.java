@@ -59,7 +59,7 @@ public class NoteImage extends Note{
 
     public void saveImageNote() {
         Log.d("saveCard", "saveCard-> saveDocument");
-        adapter.saveNoteImage(this.title, this.file.toString(), this.id);
+        adapter.saveNoteImage(this.title, this.id);
     }
 }
 

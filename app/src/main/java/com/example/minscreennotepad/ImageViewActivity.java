@@ -95,7 +95,7 @@ public class ImageViewActivity extends AppCompatActivity {
         }
         else {
             DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
-            databaseAdapter.saveChangesNoteImage(noteTitle.getText().toString(),noteImage.getFile().toString(), noteImage.getId());
+            databaseAdapter.saveChangesNoteImage(noteTitle.getText().toString(), noteImage.getId());
             note.setTitle(noteTitle.getText().toString());
         }
     }
