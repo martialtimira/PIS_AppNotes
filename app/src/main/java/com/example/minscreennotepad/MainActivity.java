@@ -84,7 +84,10 @@ public class MainActivity extends AppCompatActivity implements NoteListAdapter.O
             goToLoginActivity();
         }
         else {
-            getSupportActionBar().setTitle("Notas de " + viewModel.getDBUser().getEmail());
+            String email = viewModel.getDBUser().getEmail();
+            int atIndex = email.indexOf("@");
+            email = email.substring(0, atIndex);
+            getSupportActionBar().setTitle("Notas de " + email);
             viewModel.refreshNotes();
         }
         super.onResume();
