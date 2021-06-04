@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.minscreennotepad.NoteClasses.NoteImage;
 import com.example.minscreennotepad.NoteClasses.NoteText;
+import com.squareup.picasso.Picasso;
 
 public class ImageViewActivity extends AppCompatActivity {
     
@@ -73,7 +74,7 @@ public class ImageViewActivity extends AppCompatActivity {
         NoteImage note = (NoteImage)viewModel.getNoteToView();
 
         noteTitle.setText(note.getTitle(), TextView.BufferType.EDITABLE);
-        noteContent.setImageURI(note.getFile());
+        Picasso.with(this).load(note.getFile()).into(noteContent);
     }
 
     /**

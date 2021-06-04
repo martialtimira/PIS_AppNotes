@@ -1,6 +1,10 @@
 package com.example.minscreennotepad;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -9,6 +13,8 @@ import com.example.minscreennotepad.NoteClasses.Note;
 import com.example.minscreennotepad.NoteClasses.NoteImage;
 import com.example.minscreennotepad.NoteClasses.NoteText;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -17,9 +23,16 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -29,6 +42,7 @@ public class DatabaseAdapter{
     public static final String TAG = "DatabaseAdapter";
     public static FirebaseFirestore db = FirebaseFirestore.getInstance();
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
+    private StorageReference storageReference;
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser user;
 
@@ -61,10 +75,10 @@ public class DatabaseAdapter{
         void setToast(String s);
     }
 
-
     public void initFirebase(){
 
         user = mAuth.getCurrentUser();
+        storageReference = FirebaseStorage.getInstance().getReference();
         if (user == null) {
             mAuth.signInAnonymously() // Fer amb user y password
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -114,7 +128,10 @@ public class DatabaseAdapter{
                                     retrieved_noteList.add(new NoteText(document.getString("title"), document.getString("body"), document.getId()));
                                 }
                                 else if (document.get("noteType").equals("image") ) {
-                                    retrieved_noteList.add(new NoteImage(document.getString("title"), Uri.parse((String) document.get("body")), document.getId()));
+                                    //downlaoad URI here
+                                    NoteImage noteImage = new NoteImage(document.getString("title"), null, document.getId());
+                                    downloadImage(document.getString("body"), noteImage);
+                                    retrieved_noteList.add(noteImage);
                                 }
                                 else if (document.get("noteType").equals("audio")) {
                                     //retrieved_noteList.add(new NoteAudio(document.getString("title"), document.getString("body")));
@@ -126,6 +143,25 @@ public class DatabaseAdapter{
                         }
                     }
                 });
+    }
+
+    public void downloadImage(String imageAdress, NoteImage noteImage) {
+
+        StorageReference fileRef = storageReference.child(imageAdress);
+        fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Log.d(TAG, "Download URL: " + uri.toString());
+                noteImage.setFile(uri);
+            }
+        });
+    }
+
+    private Uri getImageUriFromBitmap(Context context, Bitmap bitmap){
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "Title", null);
+        return Uri.parse(path.toString());
     }
 
     public void saveNoteText (String title, String body, String id) {
@@ -156,7 +192,8 @@ public class DatabaseAdapter{
         // Create a new user with a first and last name
         Map<String, Object> note = new HashMap<>();
         note.put("title", title);
-        note.put("body", body);
+        String imageAdress = (user.getUid() + "/" + title);
+        note.put("body", imageAdress);
         note.put("noteType", "image");
         // Add a new document with a generated ID
         db.collection(user.getEmail()).document(id).set(note);
